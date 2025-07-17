@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered KeNHA Infrastructure Dashboard (Western)</title>
+    <title>AI-Powered Road Inspection & Management System: A Pilot A1 KSM–KKM–Webuye–KTL Rd</title>
     <!-- Favicon (optional but nice touch) -->
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/KeNHA_Logo.svg/1200px-KeNHA_Logo.svg.png" type="image/png">
+    <link rel="icon" href="logo.png" type="image/png">
 
     <style>
+        /* Import modern sans-serif fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;700&display=swap');
+
         /* General Body Styles */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif; /* Changed to Inter for a modern look */
             margin: 0;
             padding: 0;
             background-color: #f0f2f5;
@@ -20,86 +23,146 @@
 
         /* Header Styles */
         header {
-            background-color: #fff;
+            background-image: url('banner.jpg'); /* Background banner image */
+            background-size: cover; /* Cover the entire header area */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-color: #0056b3; /* Fallback color if image fails */
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column; /* Stack logo/title and controls vertically */
+            justify-content: center;
+            align-items: center; /* Center content horizontally */
             flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            color: white; /* Default text color for header content */
+            min-height: 180px; /* Increased height for better banner visibility and content spacing */
+            position: relative; /* Needed for overlay */
+            text-align: center; /* Center text within header */
+        }
+
+        /* Overlay for better text readability on banner */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Darker overlay for improved contrast */
+            z-index: 1; /* Below content, above background */
+        }
+
+        .logo, .header-controls {
+            z-index: 2; /* Bring content above overlay */
+            position: relative;
+            width: 100%; /* Allow elements to take full width for centering */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content within these containers */
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px; /* Add some space for wrapping */
+            margin-bottom: 15px; /* More space between logo/title and buttons */
         }
 
         .logo img {
-            height: 50px;
-            margin-right: 15px;
+            height: 60px; /* Slightly larger logo */
+            width: auto; /* Maintain aspect ratio */
+            margin-bottom: 10px; /* Space between logo and title text */
+            border-radius: 12px; /* More rounded corners for logo */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4); /* More prominent shadow for logo */
+            background-color: rgba(255, 255, 255, 0.9); /* Slight white background for better integration */
+            padding: 5px; /* Padding around logo */
         }
 
         .logo h1 {
             margin: 0;
-            font-size: 1.8em;
-            color: #0056b3; /* KeNHA blue */
+            font-size: 2.2em; /* Larger main title */
+            color: white; /* Ensure base H1 color is white for visibility on banner */
+            line-height: 1.2; /* Adjust line height for multi-line title */
+            font-family: 'Roboto', sans-serif; /* Changed to Roboto for a cleaner look */
+        }
+
+        /* Specific styling for the two parts of the title */
+        .title-part1 {
+            font-family: 'Merriweather', serif; /* Merriweather font applied here */
+            color: #FFFFFF; /* Solid white for better readability */
+            font-weight: 800; /* Extra bolder */
+            font-size: 1em; /* Reduced font size slightly */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Subtle drop shadow for readability */
+            display: block; /* Ensure it takes its own line within H1 if needed */
+        }
+
+        .title-part2 {
+            color: #FFD700; /* Gold - strong, appealing accent */
+            font-weight: 600;
+            font-size: 0.8em; /* Slightly smaller for subtitle effect, but still clear */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Subtle drop shadow for readability */
+            display: block; /* Ensure it takes its own line within H1 if needed */
+            margin-top: 5px; /* Small gap between title parts */
         }
 
         /* Toggle Buttons and Top Home Button Container */
         .header-controls {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px; /* Space between toggles and new button */
+            flex-direction: row; /* Keep buttons in a row */
+            justify-content: center; /* Center buttons horizontally */
+            gap: 20px; /* More space between toggles and new button */
+            margin-top: 15px; /* Space between title and controls */
         }
 
         .toggle-container {
             display: flex;
-            background-color: #e0e0e0;
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white background for buttons */
             border-radius: 25px;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Shadow for buttons */
         }
 
         .toggle-button {
-            padding: 10px 20px;
+            padding: 12px 25px; /* Larger padding for buttons */
             border: none;
             background-color: transparent;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1.1em; /* Slightly larger font for buttons */
             font-weight: bold;
-            color: #555;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            color: black; /* Changed to solid black */
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease; /* Added box-shadow transition */
+            text-shadow: none; /* Removed blue outline */
         }
 
         .toggle-button.active {
             background-color: #ffc107; /* Yellow theme for public */
-            color: #333;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            color: #000; /* Very black text for active yellow button */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* More prominent shadow for active button */
+            transform: translateY(-2px); /* Slight lift on active */
+            text-shadow: none; /* Ensure no text shadow when active */
         }
 
         /* Updated style for staff/admin button */
         #staffAdminToggle {
-            background-color: #0056b3; /* Blue theme for staff */
-            color: #fff;
+            background-color: rgba(255, 255, 255, 0.3); /* Slightly more opaque whitish transparent background */
+            color: black; /* Changed to solid black */
         }
         #staffAdminToggle:hover {
-            background-color: #004085;
+            background-color: #000080; /* Solid Navy Dark Blue on hover */
+            color: white; /* White text on hover */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Consistent hover shadow */
         }
 
 
         /* New Top Home Button Style */
         #goBackHomeTopBtn {
-            padding: 10px 20px;
+            padding: 12px 25px;
             border: none;
-            background-color: #6c757d; /* Grey for "back" */
+            background-color: rgba(108, 117, 125, 0.7); /* Semi-transparent grey */
             color: white;
             border-radius: 25px; /* Same rounded as toggles */
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1.1em;
             font-weight: bold;
             transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease, visibility 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             opacity: 0; /* Hidden by default */
             visibility: hidden; /* Hidden from interaction */
         }
@@ -144,7 +207,7 @@
 
         /* Form Styles */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced margin for less negative space */
         }
 
         label {
@@ -163,6 +226,7 @@
             padding: 12px 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
+            font-family: 'Inter', sans-serif; /* Apply Inter font to form inputs */
             font-size: 1em;
             box-sizing: border-box; /* Include padding in width */
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -487,6 +551,13 @@
             .logo h1 {
                 font-size: 1.5em;
             }
+            /* Adjust title font sizes for mobile */
+            .logo h1 .title-part1 {
+                font-size: 0.9em;
+            }
+            .logo h1 .title-part2 {
+                font-size: 0.7em;
+            }
 
             main {
                 margin: 20px;
@@ -523,14 +594,16 @@
 <body>
     <header>
         <div class="logo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/KeNHA_Logo.svg/1200px-KeNHA_Logo.svg.png" alt="KeNHA Logo">
-            <h1>AI-Powered Infrastructure Dashboard for KeNHA (Western)</h1>
+            <img src="logo.png" alt="Project Logo">
+            <h1>
+                <span class="title-part1">AI-Powered Road Inspection & Management System</span>
+                <span class="title-part2">A Pilot on A1 KSM–KKM–Webuye–KTL Rd</span>
+            </h1>
         </div>
         <div class="header-controls">
             <div class="toggle-container">
-                <button id="publicToggle" class="toggle-button active">Public Report</button>
-                <!-- Renamed staffToggle to staffAdminToggle -->
-                <button id="staffAdminToggle" class="toggle-button">KeNHA Staff / Admin</button>
+                <button id="publicToggle" class="toggle-button active">Report Now</button>
+                <button id="staffAdminToggle" class="toggle-button">Authorized Personnel</button>
             </div>
             <button id="goBackHomeTopBtn">Go Back Home</button>
         </div>
@@ -538,7 +611,7 @@
 
     <main id="publicReportSection">
         <div id="reportFormContainer">
-            <h2>Submit Road Defect Report</h2>
+            <h2>Report a Road Defect</h2>
             <p>Fill in the details below to submit an inspection report.</p>
             <form id="defectReportForm">
                 <div class="form-group">
@@ -631,7 +704,7 @@
             </div>
 
             <div id="snapshotAnalysis">
-                <h4>Snapshot Analysis: C27 Kisumu–Bondo Road</h4>
+                <h4>Snapshot Analysis: A1 KSM–KKM–Webuye–KTL Rd</h4>
                 <div class="stats-container">
                     <div class="stat-box">
                         <span class="stat-value" id="totalActiveReports">0</span>
@@ -694,13 +767,27 @@
 
         const getLocationBtn = document.getElementById('getLocationBtn');
         const latitudeInput = document.getElementById('latitudeInput');
-        const longitudeInput = document.getElementById('longitudeInput');
+        const longitudeInput = document = document.getElementById('longitudeInput');
         const locationStatus = document.getElementById('locationStatus');
         const defectMapDiv = document.getElementById('defectMap');
         const mapLocationDetails = document.getElementById('mapLocationDetails');
 
         // --- Google Maps API Key (IMPORTANT: Replace with your actual key) ---
-        const GOOGLE_MAPS_API_KEY = "AIzaSyBO6Ru9uIEdIyUI6Rq3qmlEr6rxuNRemw8"; // <<< REPLACE THIS WITH YOUR GOOGLE MAPS API KEY!!!
+        // If you are seeing "Oops! Something went wrong" or "RefererNotAllowedMapError",
+        // it means the URL you are viewing this page from is NOT authorized in your Google Cloud Console.
+        // 1. Go to Google Cloud Console (console.cloud.google.com).
+        // 2. Navigate to "APIs & Services" > "Credentials".
+        // 3. Edit your Google Maps API Key.
+        // 4. Under "Application restrictions", select "HTTP referrers (web sites)".
+        // 5. In the "Website restrictions" section, add the EXACT URL(s) you use to access this page.
+        //    Examples:
+        //    - If using a local server: `http://localhost:8080/*`
+        //    - If opening file directly: `file:///*` (this covers all local file paths)
+        //    - If deployed: `https://your-app.web.app/*`
+        // 6. Ensure "Maps JavaScript API" and "Geocoding API" are enabled under "API restrictions".
+        // 7. Click SAVE.
+        // 8. Clear your browser cache and hard refresh the page (Ctrl+Shift+R or Cmd+Shift+R).
+        const GOOGLE_MAPS_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE"; // <<< REPLACED WITH YOUR PROVIDED KEY
 
         let currentMap = null;
 
@@ -758,8 +845,10 @@
             goBackHomeTopBtn.classList.remove('hidden');
             goBackHomeTopBtn.classList.remove('visible');
 
+            // Ensure Google Maps script is loaded before trying to display the map
             loadGoogleMapsScript(() => {
                 console.log("Google Maps API loaded.");
+                // Map will be displayed after report submission in saveReportToFirestore
             });
         }
 
@@ -816,59 +905,107 @@
 
         // --- Google Maps Integration ---
         function loadGoogleMapsScript(callback) {
+            // Check if Google Maps API is already loaded or being loaded
             if (window.google && window.google.maps) {
                 callback();
                 return;
             }
+
+            // Prevent multiple script tags if already pending
+            if (document.getElementById('googleMapsScript')) {
+                // If script is already in head, just ensure callback is registered
+                window.initMapPlaceholder = callback;
+                return;
+            }
+
             const script = document.createElement('script');
+            script.id = 'googleMapsScript'; // Add an ID to prevent duplicates
             script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initMapPlaceholder`;
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);
 
+            // Set the global callback function
             window.initMapPlaceholder = callback;
+
+            // Add error handling for script loading itself
+            script.onerror = () => {
+                console.error("Failed to load Google Maps JavaScript API script.");
+                showAlert("Failed to load map. Check your internet connection or API key.", 'error', 5000);
+                // Potentially hide map div or show a specific error message on the page
+                defectMapDiv.innerHTML = "<p style='color:red;'>Error loading map. Please ensure your API key is correct and authorized for this domain.</p>";
+                mapLocationDetails.textContent = "Map unavailable.";
+            };
         }
 
         function displayDefectMap(lat, lng) {
+            // Ensure google.maps object is available before proceeding
+            if (!window.google || !window.google.maps) {
+                console.error("Google Maps API not loaded when trying to display map.");
+                defectMapDiv.innerHTML = "<p style='color:red;'>Map API not ready. Please try refreshing the page.</p>";
+                mapLocationDetails.textContent = "Map unavailable.";
+                return;
+            }
+
             if (!lat || !lng) {
                 defectMapDiv.innerHTML = "<p>No location data available for this report.</p>";
                 mapLocationDetails.textContent = "Location not captured.";
                 return;
             }
 
-            const mapOptions = {
-                center: { lat: lat, lng: lng },
-                zoom: 15,
-                mapTypeId: 'roadmap',
-                fullscreenControl: false,
-                streetViewControl: false,
-                mapTypeControl: false,
-                zoomControl: true,
-            };
+            try {
+                const mapOptions = {
+                    center: { lat: lat, lng: lng },
+                    zoom: 15,
+                    mapTypeId: 'roadmap',
+                    fullscreenControl: false,
+                    streetViewControl: false,
+                    mapTypeControl: false,
+                    zoomControl: true,
+                };
 
-            if (currentMap) {
-                currentMap.setCenter(mapOptions.center);
-                currentMap.setZoom(mapOptions.zoom);
-                currentMap.marker.setPosition(mapOptions.center);
-            } else {
-                currentMap = new google.maps.Map(defectMapDiv, mapOptions);
-                currentMap.marker = new google.maps.Marker({
-                    position: mapOptions.center,
-                    map: currentMap,
-                    title: 'Defect Location',
-                    animation: google.maps.Animation.DROP,
-                });
-            }
-
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ 'location': { lat: lat, lng: lng } }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                    mapLocationDetails.textContent = `Location: ${results[0].formatted_address}`;
+                if (currentMap) {
+                    currentMap.setCenter(mapOptions.center);
+                    currentMap.setZoom(mapOptions.zoom);
+                    // Check if marker exists before trying to set position
+                    if (currentMap.marker) {
+                        currentMap.marker.setPosition(mapOptions.center);
+                    } else {
+                        // Recreate marker if it somehow got lost
+                        currentMap.marker = new google.maps.Marker({
+                            position: mapOptions.center,
+                            map: currentMap,
+                            title: 'Defect Location',
+                            animation: google.maps.Animation.DROP,
+                        });
+                    }
                 } else {
-                    mapLocationDetails.textContent = `Location: Latitude ${lat.toFixed(6)}, Longitude ${lng.toFixed(6)}`;
-                    console.warn('Geocoder failed due to: ' + status);
+                    currentMap = new google.maps.Map(defectMapDiv, mapOptions);
+                    currentMap.marker = new google.maps.Marker({
+                        position: mapOptions.center,
+                        map: currentMap,
+                        title: 'Defect Location',
+                        animation: google.maps.Animation.DROP,
+                    });
                 }
-            });
+
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ 'location': { lat: lat, lng: lng } }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        mapLocationDetails.textContent = `Location: ${results[0].formatted_address}`;
+                    } else {
+                        mapLocationDetails.textContent = `Location: Latitude ${lat.toFixed(6)}, Longitude ${lng.toFixed(6)}`;
+                        console.warn('Geocoder failed due to: ' + status);
+                        // If geocoding fails, it's often due to API key restrictions or rate limits.
+                        // The map itself might still work, but address lookup won't.
+                    }
+                });
+            } catch (mapError) {
+                console.error("Error initializing or displaying Google Map:", mapError);
+                defectMapDiv.innerHTML = "<p style='color:red;'>Map display error. Please check console for details.</p>";
+                mapLocationDetails.textContent = "Map unavailable.";
+                showAlert("Map display error. Check API key restrictions.", 'error', 5000);
+            }
         }
 
 
@@ -974,7 +1111,7 @@
                     .get();
 
                 if (!querySnapshot.empty) {
-                    showAlert('⚠️ This exact report seems to have been already entered. Thank you for your continued vigilance!', 'error', 3000); // Increased duration
+                    showAlert('⚠️ This exact report seems to have been already entered. Returning to form...', 'error', 3000); // Increased duration
                     loadingSpinner.classList.remove('visible');
                     loadingSpinner.classList.add('hidden'); // Ensure spinner is hidden
                     submitButton.disabled = false;
@@ -1012,7 +1149,14 @@
                     submitButton.disabled = false;
                     submitButton.textContent = 'Submit Inspection Report';
 
-                    displayDefectMap(reportData.latitude, reportData.longitude);
+                    // Only try to display map if Google Maps API is loaded
+                    if (window.google && window.google.maps) {
+                        displayDefectMap(reportData.latitude, reportData.longitude);
+                    } else {
+                        console.warn("Google Maps API not fully loaded for map display after report submission.");
+                        defectMapDiv.innerHTML = "<p style='color:red;'>Map could not load. Check API key and console for errors.</p>";
+                        mapLocationDetails.textContent = "Map unavailable.";
+                    }
 
                 }, 2000);
 
