@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KeNHA Staff / Admin Dashboard</title>
-    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/KeNHA_Logo.svg/1200px-KeNHA_Logo.svg.png" type="image/png">
+    <title>Staff / Admin Dashboard</title>
+    <link rel="icon" href="logo.png" type="image/png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 
     <style>
         body {
@@ -18,25 +20,48 @@
 
         header {
             background-color: #0056b3; /* Blue for admin header */
-            padding: 20px;
+            background-image: url('banner.jpg'); /* Thin strip banner image */
+            background-size: cover; /* Cover the entire header area */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            padding: 10px 20px; /* Reduced padding for thin strip */
+            min-height: 100px; /* Set a minimum height for the thin strip */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             color: white;
+            position: relative; /* Needed for potential overlay if text is hard to read */
+        }
+
+        /* Optional: Add an overlay for better text readability on the banner */
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent overlay */
+            z-index: 1;
+        }
+
+        .logo, .header-controls {
+            z-index: 2; /* Ensure content is above the overlay */
+            position: relative;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 0; /* No margin-bottom for a thin header */
         }
 
         .logo img {
             height: 50px;
             margin-right: 15px;
-            filter: invert(100%); /* Make logo white for dark header */
+            /* Removed filter: invert(100%); as logo.png might be colored */
         }
 
         .logo h1 {
@@ -363,11 +388,11 @@
 <body>
     <header>
         <div class="logo">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/KeNHA_Logo.svg/1200px-KeNHA_Logo.svg.png" alt="KeNHA Logo">
-            <h1>KeNHA Staff / Admin Dashboard</h1>
+            <img src="logo.png" alt="Project Logo">
+            <h1>Staff / Admin Dashboard</h1>
         </div>
         <div class="header-controls">
-            <button id="backToPublicBtn" class="back-to-public-btn">← Back to Public Report</button>
+            <button id="backToPublicBtn" class="back-to-public-btn">← Back to 'Report Now'</button>
         </div>
     </header>
 
