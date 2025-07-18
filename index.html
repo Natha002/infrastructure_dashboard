@@ -39,7 +39,7 @@
             flex-wrap: wrap; /* Allow wrapping on smaller screens */
             color: white; /* Default text color for header content */
             min-height: 180px; /* Increased height for better banner visibility and content spacing */
-            position: relative; /* Needed for overlay */
+            position: relative; /* Needed for overlay and absolute positioning of goBackHomeTopBtn */
             text-align: center; /* Center text within header */
         }
 
@@ -105,11 +105,11 @@
             margin-top: 5px; /* Small gap between title parts */
         }
 
-        /* Toggle Buttons and Top Home Button Container */
+        /* Toggle Buttons Container */
         .header-controls {
             flex-direction: row; /* Keep buttons in a row */
             justify-content: center; /* Center buttons horizontally */
-            gap: 20px; /* More space between toggles and new button */
+            gap: 20px; /* More space between toggles */
             margin-top: 15px; /* Space between title and controls */
         }
 
@@ -153,20 +153,26 @@
         }
 
 
-        /* New Top Home Button Style */
+        /* New Top Home Button Style - positioned absolutely within header */
+        /* This button is now removed as per user request */
+        /*
         #goBackHomeTopBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             padding: 12px 25px;
             border: none;
-            background-color: rgba(108, 117, 125, 0.7); /* Semi-transparent grey */
+            background-color: rgba(108, 117, 125, 0.7);
             color: white;
-            border-radius: 25px; /* Same rounded as toggles */
+            border-radius: 25px;
             cursor: pointer;
             font-size: 1.1em;
             font-weight: bold;
             transition: background-color 0.3s ease, transform 0.2s ease, opacity 0.3s ease, visibility 0.3s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            opacity: 0; /* Hidden by default */
-            visibility: hidden; /* Hidden from interaction */
+            opacity: 0;
+            visibility: hidden;
+            z-index: 3;
         }
 
         #goBackHomeTopBtn.visible {
@@ -183,6 +189,7 @@
             background-color: #495057;
             transform: translateY(0);
         }
+        */
 
         /* Main Content Area */
         main {
@@ -580,9 +587,14 @@
                 text-align: center;
             }
 
+            /* Removed goBackHomeTopBtn from here as it's removed from HTML */
+            /*
             #goBackHomeTopBtn {
+                position: static;
                 width: 100%;
+                margin-top: 10px;
             }
+            */
 
             .logo h1 {
                 font-size: 1.5em;
@@ -666,7 +678,7 @@
             <img src="logo.png" alt="Project Logo">
             <h1>
                 <span class="title-part1">AI-Powered Road Inspection & Management System</span>
-                <span class="title-part2">A Pilot on A1 KKM–Webuye–KTL Rd</span>
+                <span class="title-part2">A Pilot on KKM–Webuye–KTL (A1) Rd</span>
             </h1>
         </div>
         <div class="header-controls">
@@ -674,8 +686,8 @@
                 <button id="publicToggle" class="toggle-button active">Report Now</button>
                 <button id="staffAdminToggle" class="toggle-button">Authorized Personnel</button>
             </div>
-            <button id="goBackHomeTopBtn">Go Back Home</button>
         </div>
+        <!-- Removed goBackHomeTopBtn as requested -->
     </header>
 
     <main id="publicReportSection">
@@ -694,9 +706,10 @@
                     <input type="text" id="userId" name="userId" placeholder="Enter your name (e.g., John Doe)">
                 </div>
 
-                <div class="form-group staff-field"> <!-- This field is hidden by default for public -->
+                <div class="form-group staff-field hidden"> <!-- This field is hidden by default for public -->
                     <label for="reporterRole">Your Role:</label>
                     <select id="reporterRole" name="reporterRole" required>
+                        <option value="">Select Role</option>
                         <option value="Inspector">Inspector</option>
                         <option value="Asst Inspector">Asst Inspector</option>
                         <option value="Engineer">Engineer</option>
@@ -704,6 +717,8 @@
                         <option value="Senior Engineer">Senior Engineer</option>
                         <option value="Road Superintendent">Road Superintendent</option>
                         <option value="Regional Director">Regional Director</option>
+                        <option value="Surveyor">Surveyor</option>
+                        <option value="Assistant Surveyor">Assistant Surveyor</option>
                     </select>
                 </div>
 
@@ -726,7 +741,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="severityLevel">Severity Level (AI-Suggested or Manual):</label>
+                    <label for="severityLevel">Severity Level (Your Assessment):</label>
                     <select id="severityLevel" name="severityLevel" required>
                         <option value="">Select severity</option>
                         <option value="Critical">Critical (Immediate safety risk, road closure likely)</option>
@@ -749,16 +764,17 @@
                     <input type="text" id="kilometerPost" name="kilometerPost" placeholder="Automatically calculated or enter manually (e.g., KM 2+500, Near Webuye Town)" required>
                 </div>
 
-                <div class="form-group staff-field">
+                <div class="form-group">
+                    <label for="approxDistanceKm0">Approx. Distance from KM 0 (Kakamega MMUST Gate):</label>
+                    <input type="text" id="approxDistanceKm0" placeholder="Auto-calculated distance" readonly class="font-bold text-blue-700">
+                    <small class="text-gray-500">This distance is automatically calculated based on KM Post or your location.</small>
+                </div>
+
+                <div class="form-group staff-field hidden">
                     <label for="assetId">Asset ID (e.g., BR-A1-001 for Bridge, CV-A1-005 for Culvert) (Optional):</label>
                     <input type="text" id="assetId" name="assetId" placeholder="e.g., BR-A1-001 or CV-A1-005">
                 </div>
-
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description" rows="4" placeholder="Enter defect details here, e.g., 'Large pothole (approx 50x30x10cm) causing traffic swerving near Odienya stream. Estimated cost: KES 50,000.'"></textarea>
-                </div>
-
+                
                 <div class="form-group">
                     <label for="imageUpload">Upload Image (Optional):</label>
                     <input type="file" id="imageUpload" name="imageUpload" accept="image/*">
@@ -766,7 +782,12 @@
                     <div id="imageUploadSuccess" class="upload-success"></div>
                 </div>
 
-                <div class="form-group staff-field">
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Enter defect details here, e.g., 'Large pothole (approx 50x30x10cm) causing traffic swerving near Odienya stream.'"></textarea>
+                </div>
+
+                <div class="form-group staff-field hidden">
                     <label for="assignedTeam">Assigned Team/Contractor (Optional):</label>
                     <input type="text" id="assignedTeam" name="assignedTeam" placeholder="e.g., Jade Contractors, Internal Team A">
                 </div>
@@ -784,7 +805,7 @@
         <div id="customAlert" class="hidden"></div>
 
 
-        <div id="thankYouSection">
+        <div id="thankYouSection" class="hidden">
             <h3>Thank you for your input! 👋</h3>
             <p>See the collective impact of community reports on the monitored infrastructure.</p>
 
@@ -792,6 +813,7 @@
                 <h4>Defect Location</h4>
                 <div id="defectMap" style="height: 350px; width: 100%; border-radius: 8px; margin-top: 15px;"></div>
                 <p id="mapLocationDetails" style="margin-top: 10px; font-style: italic; color: #777;"></p>
+                <p>Approx. Distance from KM 0 (Kakamega MMUST Gate): <strong id="displayApproxDistanceKm0">N/A</strong></p>
             </div>
 
             <!-- New section for AI Analysis display -->
@@ -853,7 +875,7 @@
         const thankYouSection = document.getElementById('thankYouSection');
         const publicToggle = document.getElementById('publicToggle'); // Main header toggle
         const staffAdminToggle = document.getElementById('staffAdminToggle'); // Main header toggle
-        const goBackHomeTopBtn = document.getElementById('goBackHomeTopBtn');
+        // const goBackHomeTopBtn = document.getElementById('goBackHomeTopBtn'); // Removed as requested
         const imageUploadInput = document.getElementById('imageUpload');
         const imageUploadProgress = document.getElementById('imageUploadProgress');
         const imageUploadSuccess = document.getElementById('imageUploadSuccess');
@@ -862,8 +884,12 @@
         const goBackHomeBtn = document.getElementById('goBackHomeBtn');
 
         const userIdInput = document.getElementById('userId');
-        const reporterRoleSelect = document.getElementById('reporterRole');
+        // Renamed reporterRoleSelect to internalReporterRoleSelect to avoid conflict with main header toggle
+        const internalReporterRoleSelect = document.getElementById('reporterRole');
         const descriptionTextarea = document.getElementById('description');
+        const defectTypeSelect = document.getElementById('defectType'); // Added for validation
+        const severityLevelSelect = document.getElementById('severityLevel'); // Added for validation
+
 
         const getLocationBtn = document.getElementById('getLocationBtn');
         const latitudeInput = document.getElementById('latitudeInput');
@@ -872,10 +898,12 @@
         const locationStatus = document.getElementById('locationStatus');
         const defectMapDiv = document.getElementById('defectMap');
         const mapLocationDetails = document.getElementById('mapLocationDetails');
+        const approxDistanceKm0Input = document.getElementById('approxDistanceKm0'); // New distance input field
 
         // Elements for AI analysis display in thank you section
         const displayAiSeverity = document.getElementById('displayAiSeverity');
         const displayAiRecommendation = document.getElementById('displayAiRecommendation');
+        const displayApproxDistanceKm0 = document.getElementById('displayApproxDistanceKm0'); // New distance display in thank you section
 
         // New internal form toggle elements
         const publicSubmissionToggle = document.getElementById('publicSubmissionToggle');
@@ -889,6 +917,7 @@
         const GOOGLE_MAPS_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE"; 
 
         let currentMap = null;
+        let currentMapMarker = null; // Separate marker for the thank you map
 
         const totalActiveReportsSpan = document.getElementById('totalActiveReports');
         const criticalIssuesTodaySpan = document.getElementById('criticalIssuesToday');
@@ -896,6 +925,17 @@
         const lastUpdatedTimestampSpan = document.getElementById('lastUpdatedTimestamp');
 
         let defectsByTypeChart;
+
+        // Define the road path for the polyline (example coordinates)
+        // This should represent the A1 KKM–Webuye–KTL Rd
+        const kkmWebuyeKtlRoadPath = [
+            { lat: 0.283, lng: 34.751 }, // Kakamega (approx MMUST Gate)
+            { lat: 0.467, lng: 34.767 }, // Lumakanda
+            { lat: 0.600, lng: 34.750 }, // Webuye
+            { lat: 0.750, lng: 34.800 }, // Lugari
+            { lat: 0.850, lng: 34.850 }, // Turbo
+            { lat: 1.02, lng: 35.00 }   // Kitale (approx)
+        ];
 
         // --- Utility Functions ---
         function showAlert(message, type = 'success', duration = 2000) {
@@ -910,6 +950,12 @@
                     customAlert.classList.add('hidden');
                 }, 500);
             }, duration);
+        }
+
+        // Function to hide the loading spinner
+        function hideLoading() {
+            loadingSpinner.classList.remove('visible');
+            loadingSpinner.classList.add('hidden');
         }
 
         // Simple Haversine formula for distance between two lat/lng points (in km)
@@ -928,26 +974,18 @@
         // Simulated Chainage Calculation (KM Post)
         // Assuming A1 KKM-Webuye-KTL Rd starts roughly at Kakamega (KM 0)
         // and ends near Kitale (approx 120 KM from Kakamega along the road)
-        const KAKAMEGA_LAT = 0.283; // Approximate Kakamega Latitude
-        const KAKAMEGA_LNG = 34.751; // Approximate Kakamega Longitude
+        const KAKAMEGA_MMUST_LAT = 0.283; // Approximate Kakamega Latitude
+        const KAKAMEGA_MMUST_LNG = 34.751; // Approximate Kakamega Longitude
         const KITALE_LAT = 1.02; // Approximate Kitale Latitude
         const KITALE_LNG = 35.00; // Approximate Kitale Longitude
         const TOTAL_ROAD_LENGTH_KM = 120; // Approximate length of A1 KKM-Webuye-KTL Rd
 
         function calculateChainage(currentLat, currentLng) {
             // Distance from Kakamega (start of road) to current location
-            const distFromKakamega = haversineDistance(KAKAMEGA_LAT, KAKAMEGA_LNG, currentLat, currentLng);
-
-            // Distance from Kakamega to Kitale (total road length for scaling)
-            // In a real scenario, this would be the actual road length, not straight-line.
-            // For simulation, we use a fixed total length.
-            // const totalRoadLength = haversineDistance(KAKAMEGA_LAT, KAKAMEGA_LNG, KITALE_LAT, KITALE_LNG);
-            // Using a fixed TOTAL_ROAD_LENGTH_KM as per requirements for simplicity.
-
-            // Calculate proportional position along the road
-            let chainageKm = distFromKakamega; // Simple direct distance for now
+            const distFromKakamega = haversineDistance(KAKAMEGA_MMUST_LAT, KAKAMEGA_MMUST_LNG, currentLat, currentLng);
 
             // Ensure chainage doesn't exceed total road length or go negative
+            let chainageKm = distFromKakamega;
             chainageKm = Math.max(0, Math.min(chainageKm, TOTAL_ROAD_LENGTH_KM));
 
             const km = Math.floor(chainageKm);
@@ -955,14 +993,112 @@
             return `KM ${km}+${String(meters).padStart(3, '0')}`;
         }
 
+        /**
+         * Parses a KM Post string (e.g., "KM 10+200") into a numeric kilometer value.
+         * @param {string} kmPostString The KM Post string to parse.
+         * @returns {number|null} The numeric kilometer value, or null if parsing fails.
+         */
+        function parseKmPostToKm(kmPostString) {
+            if (!kmPostString || typeof kmPostString !== 'string') return null;
+            const match = kmPostString.match(/KM\s*(\d+)\s*\+\s*(\d{1,3})/i); // Regex to match "KM X+YYY"
+            if (match) {
+                const km = parseInt(match[1], 10);
+                const meters = parseInt(match[2], 10);
+                return km + (meters / 1000);
+            }
+            // Fallback for cases where it might just be a number string (e.g., "10.5")
+            const num = parseFloat(kmPostString);
+            if (!isNaN(num)) return num;
+            return null;
+        }
+
+        /**
+         * Calculates the approximate distance from KM 0 (Kakamega MMUST Gate) based on KM Post or Lat/Lng.
+         * Prioritizes KM Post.
+         * @param {string} kmPost The KM Post string (e.g., "KM 10+200").
+         * @param {number} lat Latitude.
+         * @param {number} lng Longitude.
+         * @returns {number|null} The distance in kilometers, or null if cannot be determined.
+         */
+        function calculateApproxDistanceForDisplay(kmPost, lat, lng) {
+            const parsedKm = parseKmPostToKm(kmPost);
+            if (parsedKm !== null) {
+                return parsedKm;
+            } else if (lat && lng) {
+                return haversineDistance(KAKAMEGA_MMUST_LAT, KAKAMEGA_MMUST_LNG, lat, lng);
+            }
+            return null;
+        }
+
+        // AI Simulation Function (Modified for public user cost removal)
+        function simulateAIAnalysis(report) {
+            let severity = 'Medium';
+            let recommendation = 'Standard maintenance required.'; // Removed cost for public view
+            let estimatedCost = 'Estimated cost: KES 20,000.'; // Keep cost internally for staff/admin
+
+            const lowerDescription = (report.description || '').toLowerCase();
+            const lowerDefectType = (report.defectType || '').toLowerCase();
+            const userSeverity = report.severityLevel;
+
+            if (userSeverity && ['Critical', 'High', 'Medium', 'Low'].includes(userSeverity)) {
+                severity = userSeverity;
+            }
+
+            if (lowerDescription.includes('large pothole') || lowerDescription.includes('collapsed culvert') || lowerDescription.includes('severe crack') || lowerDescription.includes('impassable') || lowerDescription.includes('accident prone') || lowerDefectType === 'bridge damage') {
+                severity = 'Critical';
+                recommendation = 'Immediate attention required: severe hazard, potential road closure.';
+                estimatedCost = 'Estimated cost: KES 500,000+.';
+            } else if (lowerDescription.includes('significant crack') || lowerDescription.includes('major blockage') || lowerDescription.includes('medium pothole') || lowerDescription.includes('dangerous') || lowerDefectType === 'culvert blockage' || lowerDefectType === 'encroachment') {
+                if (severity !== 'Critical') severity = 'High';
+                recommendation = 'Urgent repair needed, schedule within 1-3 days. Significant hazard.';
+                estimatedCost = 'Estimated cost: KES 100,000 - 500,000.';
+            } else if (lowerDescription.includes('small crack') || lowerDescription.includes('minor erosion') || lowerDescription.includes('bushes') || lowerDescription.includes('overgrowth') || lowerDefectType === 'shoulder erosion' || lowerDefectType === 'illegal signpost' || lowerDefectType === 'drainage issue' || lowerDefectType === 'road sign damage') {
+                if (severity !== 'Critical' && severity !== 'High') severity = 'Medium';
+                recommendation = 'Routine maintenance required, address within 1-2 weeks. Minor hazard.';
+                estimatedCost = 'Estimated cost: KES 20,000 - 100,000.';
+            } else {
+                if (severity !== 'Critical' && severity !== 'High' && severity !== 'Medium') severity = 'Low';
+                recommendation = 'Add to routine inspection/maintenance schedule. Minimal immediate impact.';
+                estimatedCost = 'Estimated cost: KES <20,000.';
+            }
+
+            if (lowerDefectType === 'encroachment' && severity !== 'Critical' && severity !== 'High') {
+                severity = 'High';
+                recommendation = 'Notify legal and enforcement team for immediate action. Document thoroughly.';
+                estimatedCost = 'Estimated cost: Legal/removal fees.';
+            } else if (lowerDefectType === 'illegal signpost' && severity !== 'Critical' && severity !== 'High') {
+                severity = 'Medium';
+                recommendation = 'Dispatch team for signpost removal and fine assessment.';
+                estimatedCost = 'Estimated cost: Removal fees.';
+            } else if (lowerDefectType === 'culvert blockage' && severity !== 'Critical') {
+                severity = 'High';
+                recommendation = 'Urgent clearing of debris to prevent flooding/road damage.';
+                estimatedCost = 'Estimated cost: KES 50,000 - 200,000.';
+            } else if (lowerDefectType === 'pothole' && severity === 'Medium') {
+                recommendation = 'Patching required within a week.';
+                estimatedCost = 'Estimated cost: KES 20,000 - 50,000 per pothole.';
+            } else if (lowerDefectType === 'shoulder erosion' && severity === 'Medium') {
+                recommendation = 'Resurfacing or gabion placement recommended.';
+                estimatedCost = 'Estimated cost: KES 30,000 - 150,000.';
+            }
+
+            // Public users should not see the estimated cost in the recommendation
+            if (report.reporterRole === 'Public User') {
+                // Remove any cost-related phrases from the recommendation for public users
+                const publicRecommendation = recommendation.replace(/Estimated cost: KES [0-9,.]+\+?\./g, '').trim();
+                return { severity, recommendation: publicRecommendation }; 
+            } else {
+                return { severity, recommendation: `${recommendation} ${estimatedCost}` }; // Include for staff/admin
+            }
+        }
 
         // --- Navigation Control Function ---
         function showForm() {
             thankYouSection.classList.remove('visible');
-            goBackHomeTopBtn.classList.remove('visible');
+            // goBackHomeTopBtn.classList.remove('visible'); // Removed as requested
             setTimeout(() => {
                 thankYouSection.classList.add('hidden');
-                goBackHomeTopBtn.classList.add('hidden');
+                // goBackHomeTopBtn.classList.add('hidden'); // Removed as requested
             }, 500);
 
             reportFormContainer.classList.remove('hidden');
@@ -986,8 +1122,8 @@
             thankYouSection.classList.remove('hidden');
             thankYouSection.classList.remove('visible');
 
-            goBackHomeTopBtn.classList.remove('hidden');
-            goBackHomeTopBtn.classList.remove('visible');
+            // goBackHomeTopBtn.classList.remove('hidden'); // Removed as requested
+            // goBackHomeTopBtn.classList.remove('visible'); // Removed as requested
 
             // Ensure Google Maps script is loaded before trying to display the map
             loadGoogleMapsScript(() => {
@@ -1011,6 +1147,7 @@
 
                         // Calculate and set KM Post
                         kilometerPostInput.value = calculateChainage(lat, lng);
+                        updateApproxDistanceInput(); // Update the new distance field
 
                         locationStatus.textContent = 'Location acquired! ✅';
                         locationStatus.style.color = '#28a745';
@@ -1050,8 +1187,28 @@
             }
         });
 
+        // Function to update the approximate distance input field
+        function updateApproxDistanceInput() {
+            const kmPost = kilometerPostInput.value;
+            const lat = parseFloat(latitudeInput.value);
+            const lng = parseFloat(longitudeInput.value);
 
-        // --- Google Maps Integration ---
+            const distance = calculateApproxDistanceForDisplay(kmPost, lat, lng);
+            if (distance !== null) {
+                approxDistanceKm0Input.value = `${distance.toFixed(2)} km`;
+            } else {
+                approxDistanceKm0Input.value = 'N/A';
+            }
+        }
+
+        // Listen for changes in Kilometer Post input to update approx distance
+        kilometerPostInput.addEventListener('input', updateApproxDistanceInput);
+        // Also listen for changes in Latitude/Longitude if they are manually edited (though currently readonly)
+        latitudeInput.addEventListener('input', updateApproxDistanceInput);
+        longitudeInput.addEventListener('input', updateApproxDistanceInput);
+
+
+        // --- Google Maps Integration for Thank You Section ---
         function loadGoogleMapsScript(callback) {
             // Check if Google Maps API is already loaded or being loaded
             if (window.google && window.google.maps) {
@@ -1112,29 +1269,45 @@
                     zoomControl: true,
                 };
 
-                if (currentMap) {
+                // Initialize map only once
+                if (!currentMap) {
+                    currentMap = new google.maps.Map(defectMapDiv, mapOptions);
+                    currentMapMarker = new google.maps.Marker({
+                        position: mapOptions.center,
+                        map: currentMap,
+                        title: 'Defect Location',
+                        animation: google.maps.Animation.DROP,
+                    });
+
+                    // Draw the road polyline on the map
+                    const bounds = new google.maps.LatLngBounds();
+                    kkmWebuyeKtlRoadPath.forEach(coord => bounds.extend(coord));
+                    currentMap.fitBounds(bounds); // Fit map to the entire road path
+
+                    const roadPolyline = new google.maps.Polyline({
+                        path: kkmWebuyeKtlRoadPath,
+                        geodesic: true,
+                        strokeColor: '#1A73E8',
+                        strokeOpacity: 0.9,
+                        strokeWeight: 8,
+                        map: currentMap,
+                        title: 'KKM–Webuye–KTL Road Corridor'
+                    });
+
+                } else {
+                    // If map already exists, just update its center and marker position
                     currentMap.setCenter(mapOptions.center);
                     currentMap.setZoom(mapOptions.zoom);
-                    // Check if marker exists before trying to set position
-                    if (currentMap.marker) {
-                        currentMap.marker.setPosition(mapOptions.center);
+                    if (currentMapMarker) {
+                        currentMapMarker.setPosition(mapOptions.center);
                     } else {
-                        // Recreate marker if it somehow got lost
-                        currentMap.marker = new google.maps.Marker({
+                        currentMapMarker = new google.maps.Marker({
                             position: mapOptions.center,
                             map: currentMap,
                             title: 'Defect Location',
                             animation: google.maps.Animation.DROP,
                         });
                     }
-                } else {
-                    currentMap = new google.maps.Map(defectMapDiv, mapOptions);
-                    currentMap.marker = new google.maps.Marker({
-                        position: mapOptions.center,
-                        map: currentMap,
-                        title: 'Defect Location',
-                        animation: google.maps.Animation.DROP,
-                    });
                 }
 
                 const geocoder = new google.maps.Geocoder();
@@ -1187,8 +1360,14 @@
                 document.querySelector('label[for="userId"]').textContent = 'Name (Optional):';
                 userIdInput.placeholder = 'Enter your name (e.g., John Doe)';
 
-                // Set reporter role dropdown to Public User
-                reporterRoleSelect.value = 'Public User'; // This option is now dynamically added/removed
+                // Dynamically set reporter role to Public User
+                internalReporterRoleSelect.innerHTML = ''; // Clear existing options
+                const publicOption = document.createElement('option');
+                publicOption.value = 'Public User';
+                publicOption.textContent = 'Public User';
+                publicOption.selected = true; // Make it selected by default for public
+                internalReporterRoleSelect.appendChild(publicOption);
+
 
                 // Hide staff-only fields
                 staffFields.forEach(field => {
@@ -1204,21 +1383,6 @@
                 // Make description optional for public
                 descriptionTextarea.removeAttribute('required');
 
-                // Dynamically add "Public User" option if not present
-                if (!reporterRoleSelect.querySelector('option[value="Public User"]')) {
-                    const publicOption = document.createElement('option');
-                    publicOption.value = 'Public User';
-                    publicOption.textContent = 'Public User';
-                    reporterRoleSelect.insertBefore(publicOption, reporterRoleSelect.firstChild);
-                }
-                // Ensure other staff roles are removed if present
-                Array.from(reporterRoleSelect.options).forEach(option => {
-                    if (option.value !== 'Public User') {
-                        option.remove();
-                    }
-                });
-
-
             } else if (roleType === 'staff') {
                 publicSubmissionToggle.classList.remove('active');
                 staffSubmissionToggle.classList.add('active');
@@ -1227,39 +1391,31 @@
                 document.querySelector('label[for="userId"]').textContent = 'Your Name/ID:';
                 userIdInput.placeholder = 'Enter your name or ID';
 
-                // Remove "Public User" option if present
-                const publicOption = reporterRoleSelect.querySelector('option[value="Public User"]');
-                if (publicOption) {
-                    publicOption.remove();
-                }
-
-                // Add staff roles if not present
+                // Remove "Public User" option if present and add staff roles
+                internalReporterRoleSelect.innerHTML = ''; // Clear existing options
                 const staffRoles = [
+                    { value: "", text: "Select Role" }, // Add a default "Select Role" option for staff
                     { value: "Inspector", text: "Inspector" },
                     { value: "Asst Inspector", text: "Asst Inspector" },
                     { value: "Engineer", text: "Engineer" },
-                    { value: "Assistant Engineer", text: "Assistant Engineer" }, // Added Assistant Engineer
+                    { value: "Assistant Engineer", text: "Assistant Engineer" },
                     { value: "Senior Engineer", text: "Senior Engineer" },
                     { value: "Road Superintendent", text: "Road Superintendent" },
-                    { value: "Regional Director", text: "Regional Director" }
+                    { value: "Regional Director", text: "Regional Director" },
+                    { value: "Surveyor", text: "Surveyor" }, // Added Surveyor
+                    { value: "Assistant Surveyor", text: "Assistant Surveyor" } // Added Assistant Surveyor
                 ];
-
-                // Clear existing options first (except the default "Select severity" for defect type etc.)
-                // This ensures we don't duplicate options on repeated toggles
-                const currentOptions = Array.from(reporterRoleSelect.options).map(o => o.value);
                 staffRoles.forEach(role => {
-                    if (!currentOptions.includes(role.value)) {
-                        const option = document.createElement('option');
-                        option.value = role.value;
-                        option.textContent = role.text;
-                        reporterRoleSelect.appendChild(option);
-                    }
+                    const option = document.createElement('option');
+                    option.value = role.value;
+                    option.textContent = role.text;
+                    internalReporterRoleSelect.appendChild(option);
                 });
-
                 // Set reporter role dropdown to a default staff value if currently 'Public User' or empty
-                if (reporterRoleSelect.value === 'Public User' || reporterRoleSelect.value === '') {
-                    reporterRoleSelect.value = 'Inspector'; // Default to Inspector for staff
+                if (internalReporterRoleSelect.value === '' || internalReporterRoleSelect.value === 'Public User') {
+                    internalReporterRoleSelect.value = 'Inspector'; // Default to Inspector for staff
                 }
+
 
                 // Show staff-only fields
                 staffFields.forEach(field => {
@@ -1349,26 +1505,66 @@
         defectReportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            submitButton.disabled = true;
-            showDashboard();
+            // Basic validation for required fields
+            const defectType = defectTypeSelect.value;
+            const severityLevel = severityLevelSelect.value;
+            const kilometerPost = kilometerPostInput.value;
+            const latitude = latitudeInput.value ? parseFloat(latitudeInput.value) : null;
+            const longitude = longitudeInput.value ? parseFloat(longitudeInput.value) : null;
+            const description = descriptionTextarea.value;
+
+            if (!defectType || !severityLevel || !kilometerPost) {
+                showAlert("Please fill in all required fields (Defect Type, Severity, Kilometer Post).", 'error', 3000);
+                submitButton.disabled = false; // Re-enable button on validation failure
+                return;
+            }
+
+            if (isNaN(latitude) || isNaN(longitude) || latitude === null || longitude === null) { // Added null check
+                 showAlert("Please get your location or ensure Latitude and Longitude are valid.", 'error', 3000);
+                 submitButton.disabled = false; // Re-enable button on validation failure
+                 return;
+            }
+
+            // Specific validation for staff fields if staff submission is active
+            if (staffSubmissionToggle.classList.contains('active')) {
+                if (!internalReporterRoleSelect.value) {
+                    showAlert("Please select your Role.", 'error', 3000);
+                    submitButton.disabled = false; // Re-enable button on validation failure
+                    return;
+                }
+                if (!description) { // Description is required for staff
+                    showAlert("Description is required for Staff Submissions.", 'error', 3000);
+                    submitButton.disabled = false; // Re-enable button on validation failure
+                    return;
+                }
+            } else { // Public submission is active
+                // Description is optional for public, so no required check here
+            }
+
+            submitButton.disabled = true; // Disable button only after all sync validations pass
+            hideLoading(); // Hide any existing loading spinner from geolocation
+            showDashboard(); // Show the dashboard/loading state for submission
 
             const formData = new FormData(defectReportForm);
             const reportData = {};
 
-            reportData.userId = formData.get('userId') || 'Anonymous Public User';
-            reportData.reporterRole = formData.get('reporterRole') || 'Public User'; // Ensure it's never unknown
-            reportData.defectType = formData.get('defectType');
-            reportData.severityLevel = formData.get('severityLevel');
-            reportData.kilometerPost = formData.get('kilometerPost');
-            reportData.latitude = latitudeInput.value ? parseFloat(latitudeInput.value) : null;
-            reportData.longitude = longitudeInput.value ? parseFloat(longitudeInput.value) : null;
-            reportData.assetId = formData.get('assetId') || null;
-            reportData.description = formData.get('description');
+            reportData.userId = userIdInput.value || 'Anonymous Public User'; // Use userIdInput for name
+            reportData.reporterRole = internalReporterRoleSelect.value; // Use the internal select for role
+            reportData.defectType = defectType;
+            reportData.severityLevel = severityLevel;
+            reportData.kilometerPost = kilometerPost;
+            reportData.latitude = latitude;
+            reportData.longitude = longitude;
+            reportData.assetId = formData.get('assetId') || null; // Use formData.get for assetId as it's a staff field
+            reportData.description = description;
             reportData.imageUrl = imageUploadInput.dataset.imageUrl || null;
             reportData.assignedTeam = formData.get('assignedTeam') || 'N/A'; // Changed from Unassigned to N/A
 
             reportData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
             reportData.status = 'Reported'; // Initial status
+            
+            // Calculate approx distance for the report data itself
+            reportData.approxDistanceKm0 = calculateApproxDistanceForDisplay(reportData.kilometerPost, reportData.latitude, reportData.longitude);
 
             await saveReportToFirestore(reportData);
         });
@@ -1419,6 +1615,7 @@
                 latitudeInput.value = '';
                 longitudeInput.value = '';
                 kilometerPostInput.value = ''; // Clear KM Post
+                approxDistanceKm0Input.value = ''; // Clear approx distance field
                 locationStatus.textContent = 'Click "Use my Location" to get coordinates and estimated KM Post.'; // Updated text
                 locationStatus.style.color = '#666';
 
@@ -1426,13 +1623,15 @@
                 setTimeout(() => {
                     thankYouSection.classList.add('visible');
                     thankYouSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    goBackHomeTopBtn.classList.add('visible');
+                    // goBackHomeTopBtn.classList.add('visible'); // Removed as requested
                     submitButton.disabled = false;
                     submitButton.textContent = 'Submit Inspection Report';
 
                     // Update AI analysis display in thank you section
                     displayAiSeverity.textContent = reportData.aiSeverity || 'N/A';
                     displayAiRecommendation.textContent = reportData.aiRecommendation || 'N/A';
+                    displayApproxDistanceKm0.textContent = reportData.approxDistanceKm0 !== null ? `${reportData.approxDistanceKm0.toFixed(2)} km` : 'N/A';
+
 
                     // Only try to display map if Google Maps API is loaded
                     if (window.google && window.google.maps) {
@@ -1452,7 +1651,7 @@
                 loadingSpinner.classList.remove('visible');
                 setTimeout(() => loadingSpinner.classList.add('hidden'), 300);
 
-                showForm();
+                showForm(); // Go back to the form on error
 
                 imageUploadProgress.style.width = '0%';
                 imageUploadSuccess.style.display = 'none';
@@ -1465,10 +1664,10 @@
             updateFormFieldsForRole('public'); // Reset to public view
             showForm();
         }); 
-        goBackHomeTopBtn.addEventListener('click', () => {
-            updateFormFieldsForRole('public'); // Reset to public view
-            showForm();
-        });
+        // goBackHomeTopBtn.addEventListener('click', () => { // Removed as requested
+        //     updateFormFieldsForRole('public'); // Reset to public view
+        //     showForm();
+        // });
 
 
         // --- Real-time Data Visualization (Public View) ---
@@ -1476,155 +1675,132 @@
             .onSnapshot((snapshot) => {
                 const reports = [];
                 snapshot.forEach(doc => {
-                    reports.push({ id: doc.id, ...doc.data() });
+                    reports.push(doc.data());
                 });
-                updatePublicDashboard(reports);
-            }, (error) => {
-                console.error("Error fetching real-time reports:", error);
-            });
 
-        function updatePublicDashboard(reports) {
-            let totalActive = reports.filter(r => r.status !== 'Resolved' && r.status !== 'Deferred').length;
-            // Use aiSeverity for critical issues
-            let criticalIssuesToday = reports.filter(r => r.aiSeverity === 'Critical' && r.timestamp && isToday(r.timestamp.toDate())).length;
+                // Calculate stats
+                const totalActive = reports.filter(r => r.status !== 'Resolved' && r.status !== 'Deferred').length;
+                const criticalToday = reports.filter(r => {
+                    const reportDate = r.timestamp && r.timestamp.toDate();
+                    const today = new Date();
+                    return r.aiSeverity === 'Critical' && reportDate &&
+                           reportDate.getDate() === today.getDate() &&
+                           reportDate.getMonth() === today.getMonth() &&
+                           reportDate.getFullYear() === today.getFullYear();
+                }).length;
 
-            totalActiveReportsSpan.textContent = totalActive;
-            criticalIssuesTodaySpan.textContent = criticalIssuesToday;
-            lastUpdatedTimestampSpan.textContent = new Date().toLocaleString();
+                totalActiveReportsSpan.textContent = totalActive;
+                criticalIssuesTodaySpan.textContent = criticalToday;
+                lastUpdatedTimestampSpan.textContent = new Date().toLocaleString();
 
-            const defectCounts = {};
-            reports.forEach(report => {
-                const type = report.defectType || 'Unknown';
-                defectCounts[type] = (defectCounts[type] || 0) + 1;
-            });
+                // Update chart
+                const defectCounts = {};
+                reports.forEach(report => {
+                    const type = report.defectType || 'Unknown';
+                    defectCounts[type] = (defectCounts[type] || 0) + 1;
+                });
 
-            const chartLabels = Object.keys(defectCounts);
-            const chartData = Object.values(defectCounts);
+                const chartLabels = Object.keys(defectCounts);
+                const chartData = Object.values(defectCounts);
 
-            if (defectsByTypeChart) {
-                defectsByTypeChart.data.labels = chartLabels;
-                defectsByTypeChart.data.datasets[0].data = chartData;
-                defectsByTypeChart.update();
-            } else {
-                defectsByTypeChart = new Chart(defectsByTypeChartCtx, {
-                    type: 'pie',
-                    data: {
-                        labels: chartLabels,
-                        datasets: [{
-                            data: chartData,
-                            backgroundColor: [
-                                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9900', '#A52A2A', '#008000', '#6A5ACD', '#DAA520'
-                            ],
-                            hoverOffset: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                align: 'center',
-                                labels: {
-                                    font: {
-                                        size: 12
-                                    }
-                                }
-                            },
-                            title: {
-                                display: true,
-                                text: 'Defects by Type (Cumulative)',
-                                font: {
-                                    size: 16
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
+                if (defectsByTypeChart) {
+                    defectsByTypeChart.data.labels = chartLabels;
+                    defectsByTypeChart.data.datasets[0].data = chartData;
+                    defectsByTypeChart.update();
+                } else {
+                    defectsByTypeChart = new Chart(defectsByTypeChartCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: chartLabels,
+                            datasets: [{
+                                data: chartData,
+                                backgroundColor: [
+                                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9900', '#A52A2A', '#008000', '#6A5ACD', '#DAA520'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { position: 'right', align: 'center', labels: { font: { size: 12 } } },
+                                title: { display: true, text: 'Defects by Type (Cumulative)', font: { size: 16 } },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            if (label) label += ': ';
+                                            label += context.parsed + ' reports (' + ((context.parsed / chartData.reduce((a,b)=>a+b,0)) * 100).toFixed(1) + '%)';
+                                            return label;
                                         }
-                                        label += context.parsed + ' reports (' + ((context.parsed / chartData.reduce((a,b)=>a+b,0)) * 100).toFixed(1) + '%)';
-                                        return label;
                                     }
                                 }
                             }
                         }
-                    }
-                });
-            }
-        }
+                    });
+                }
+            }, (error) => {
+                console.error("Error fetching real-time reports for public view:", error);
+                // Optionally show a message to the user
+            });
 
-        function isToday(someDate) {
-            if (!someDate) return false;
-            const today = new Date();
-            return someDate.getDate() === today.getDate() &&
-                   someDate.getMonth() === today.getMonth() &&
-                   someDate.getFullYear() === today.getFullYear();
-        }
 
-        // AI Simulation Function - Enhanced for clearer criteria and impact
-        function simulateAIAnalysis(report) {
-            let severity = 'Medium';
-            let recommendation = 'Standard maintenance required. Estimated cost: KES 20,000.';
-
-            const lowerDescription = (report.description || '').toLowerCase();
-            const lowerDefectType = (report.defectType || '').toLowerCase();
-            const userSeverity = report.severityLevel; // User's selected severity
-
-            // Prioritize user's manual severity if provided and valid
-            if (userSeverity && ['Critical', 'High', 'Medium', 'Low'].includes(userSeverity)) {
-                severity = userSeverity;
-            }
-
-            // AI analysis based on keywords and defect types
-            if (lowerDescription.includes('large pothole') || lowerDescription.includes('collapsed culvert') || lowerDescription.includes('severe crack') || lowerDescription.includes('impassable') || lowerDescription.includes('accident prone') || lowerDefectType === 'bridge damage') {
-                severity = 'Critical';
-                recommendation = 'Immediate attention required: severe hazard, potential road closure. Estimated cost: KES 500,000+.';
-            } else if (lowerDescription.includes('significant crack') || lowerDescription.includes('major blockage') || lowerDescription.includes('medium pothole') || lowerDescription.includes('dangerous') || lowerDefectType === 'culvert blockage' || lowerDefectType === 'encroachment') {
-                if (severity !== 'Critical') severity = 'High'; // Don't downgrade from Critical
-                recommendation = 'Urgent repair needed, schedule within 1-3 days. Significant hazard. Estimated cost: KES 100,000 - 500,000.';
-            } else if (lowerDescription.includes('small crack') || lowerDescription.includes('minor erosion') || lowerDescription.includes('bushes') || lowerDescription.includes('overgrowth') || lowerDefectType === 'shoulder erosion' || lowerDefectType === 'illegal signpost' || lowerDefectType === 'drainage issue' || lowerDefectType === 'road sign damage') {
-                if (severity !== 'Critical' && severity !== 'High') severity = 'Medium'; // Don't downgrade from higher
-                recommendation = 'Routine maintenance required, address within 1-2 weeks. Minor hazard. Estimated cost: KES 20,000 - 100,000.';
-            } else {
-                if (severity !== 'Critical' && severity !== 'High' && severity !== 'Medium') severity = 'Low'; // Don't downgrade from higher
-                recommendation = 'Add to routine inspection/maintenance schedule. Minimal immediate impact. Estimated cost: KES <20,000.';
-            }
-
-            // Refine recommendations based on specific defect types if not already high severity
-            if (lowerDefectType === 'encroachment' && severity !== 'Critical' && severity !== 'High') {
-                severity = 'High';
-                recommendation = 'Notify legal and enforcement team for immediate action. Document thoroughly. Estimated cost: Legal/removal fees.';
-            } else if (lowerDefectType === 'illegal signpost' && severity !== 'Critical' && severity !== 'High') {
-                severity = 'Medium';
-                recommendation = 'Dispatch team for signpost removal and fine assessment. Estimated cost: Removal fees.';
-            } else if (lowerDefectType === 'culvert blockage' && severity !== 'Critical') {
-                severity = 'High';
-                recommendation = 'Urgent clearing of debris to prevent flooding/road damage. Estimated cost: KES 50,000 - 200,000.';
-            } else if (lowerDefectType === 'pothole' && severity === 'Medium') {
-                recommendation = 'Patching required within a week. Estimated cost: KES 20,000 - 50,000 per pothole.';
-            } else if (lowerDefectType === 'shoulder erosion' && severity === 'Medium') {
-                recommendation = 'Resurfacing or gabion placement recommended. Estimated cost: KES 30,000 - 150,000.';
-            }
-
-            return { severity, recommendation };
-        }
-
+        // --- Initial Load Logic ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize form to public view on load
-            updateFormFieldsForRole('public'); // Initialize the new internal toggle to public
-            showForm();
+            // Initialize with public view
+            updateFormFieldsForRole('public');
+            // Load map script, then initialize map once it's ready
+            loadGoogleMapsScript(() => {
+                // This initMap is for the form's map, which is only used when filling the form
+                // The thankYouSection's map is initialized in displayDefectMap
+                const initialMapOptions = {
+                    center: { lat: KAKAMEGA_MMUST_LAT, lng: KAKAMEGA_MMUST_LNG },
+                    zoom: 15,
+                    mapTypeId: 'roadmap',
+                    fullscreenControl: true,
+                    streetViewControl: false,
+                    mapTypeControl: true,
+                    zoomControl: true,
+                };
+                // Ensure 'map' and 'marker' are declared in a scope accessible to the dragend listener
+                // For now, let's assume they are declared globally or in a parent scope if this is the only script.
+                // If this script is wrapped in an IIFE, they'd need to be exposed to global or passed around.
+                // For direct HTML script, they are global by default.
+                window.map = new google.maps.Map(document.getElementById('defectMap'), initialMapOptions); // Changed to defectMap
+                window.marker = new google.maps.Marker({
+                    position: initialMapOptions.center,
+                    map: window.map,
+                    draggable: true,
+                    title: "Defect Location"
+                });
 
-            loadingSpinner.classList.add('hidden');
-            thankYouSection.classList.add('hidden');
-            goBackHomeTopBtn.classList.add('hidden');
-            customAlert.classList.add('hidden');
+                // Draw the road polyline on the form map
+                const bounds = new google.maps.LatLngBounds();
+                kkmWebuyeKtlRoadPath.forEach(coord => bounds.extend(coord));
+                window.map.fitBounds(bounds); // Fit map to the entire road path
 
-            // Set the main header public toggle as active by default
-            publicToggle.classList.add('active');
-            staffAdminToggle.classList.remove('active');
+                window.roadPolyline = new google.maps.Polyline({
+                    path: kkmWebuyeKtlRoadPath,
+                    geodesic: true,
+                    strokeColor: '#1A73E8',
+                    strokeOpacity: 0.9,
+                    strokeWeight: 8,
+                    map: window.map,
+                    title: 'KKM–Webuye–KTL Road Corridor'
+                });
+
+                // The map in the form is now defectMap, not mapStatus.
+                // The mapStatus element is used for text feedback.
+                locationStatus.textContent = "Map loaded. Drag marker to pinpoint location or use 'Use my Location'.";
+
+                window.marker.addListener('dragend', () => {
+                    const newPosition = window.marker.getPosition();
+                    latitudeInput.value = newPosition.lat().toFixed(6);
+                    longitudeInput.value = newPosition.lng().toFixed(6);
+                    updateApproxDistanceInput();
+                });
+            });
         });
 
     </script>
