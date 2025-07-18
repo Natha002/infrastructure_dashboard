@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered Road Inspection & Management System: A Pilot A1 KSM–KKM–Webuye–KTL Rd</title>
+    <title>AI-Powered Road Inspection & Management System: A Pilot A1 KKM–Webuye–KTL Rd</title>
     <!-- Favicon (optional but nice touch) -->
     <link rel="icon" href="logo.png" type="image/png">
 
     <style>
         /* Import modern sans-serif fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Roboto:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap'); /* Added Merriweather */
+
 
         /* General Body Styles */
         body {
@@ -520,6 +522,40 @@
             background-color: #dc3545; /* Red for error */
         }
 
+        /* New internal form toggle styling */
+        .form-toggle-switch {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            background-color: #e9ecef; /* Light grey background */
+            border-radius: 20px;
+            padding: 4px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .form-toggle-button {
+            padding: 8px 18px; /* Smaller padding */
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            font-size: 0.95em; /* Smaller font size */
+            font-weight: 600;
+            color: #495057; /* Dark grey text */
+            border-radius: 16px; /* More rounded */
+            transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.2s ease;
+            flex: 1; /* Distribute space evenly */
+            text-align: center;
+        }
+
+        .form-toggle-button.active {
+            background-color: #007bff; /* Blue for active */
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .form-toggle-button:hover:not(.active) {
+            background-color: #dee2e6; /* Lighter grey on hover for inactive */
+        }
+
 
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -529,14 +565,14 @@
             }
 
             .header-controls {
-                flex-direction: column; /* Stack toggles and home button vertically */
-                width: 100%; /* Take full width */
-                align-items: flex-start; /* Align left */
+                flex-direction: column;
+                width: 100%;
+                align-items: flex-start;
             }
 
             .toggle-container {
                 width: 100%;
-                margin-bottom: 10px; /* Space between toggle and new home button */
+                margin-bottom: 10px;
             }
 
             .toggle-button {
@@ -545,13 +581,12 @@
             }
 
             #goBackHomeTopBtn {
-                width: 100%; /* Full width on small screens */
+                width: 100%;
             }
 
             .logo h1 {
                 font-size: 1.5em;
             }
-            /* Adjust title font sizes for mobile */
             .logo h1 .title-part1 {
                 font-size: 0.9em;
             }
@@ -565,29 +600,63 @@
             }
 
             .stat-box {
-                max-width: 100%; /* Ensure stat boxes stack on very small screens */
-                flex-basis: 100%; /* Each takes full width */
+                max-width: 100%;
+                flex-basis: 100%;
             }
 
             .stats-container {
-                flex-direction: column; /* Stack vertically on small screens */
+                flex-direction: column;
             }
 
-            /* Ensure chart is visible and responsive */
             .chart-container {
-                max-width: 100%; /* Allow chart to use full width */
-                height: 250px; /* Adjust height for mobile */
+                max-width: 100%;
+                height: 250px;
             }
 
-            /* NEW: Map container on mobile */
             .map-container {
                 max-width: 100%;
-                padding: 15px; /* Slightly less padding on mobile */
+                padding: 15px;
             }
 
             #defectMap {
-                height: 250px; /* Adjust height for mobile maps */
+                height: 250px;
             }
+
+            .form-toggle-switch {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                padding: 0; /* Remove padding to allow buttons to fill width */
+                box-shadow: none; /* Remove shadow for stacked look */
+            }
+            .form-toggle-button {
+                border-radius: 0; /* No rounded corners when stacked */
+                margin-bottom: 5px; /* Space between stacked buttons */
+            }
+            .form-toggle-button:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        /* Style for AI analysis display in thank you section */
+        .ai-analysis-display {
+            background-color: #f0f8ff; /* Light blue background */
+            border: 1px solid #b0e0e6;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-top: 20px;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .ai-analysis-display strong {
+            color: #0056b3;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .ai-analysis-display p {
+            margin: 5px 0;
+            color: #333;
+            font-size: 0.95em;
+            text-align: left; /* Align text to left within the box */
         }
     </style>
 </head>
@@ -597,7 +666,7 @@
             <img src="logo.png" alt="Project Logo">
             <h1>
                 <span class="title-part1">AI-Powered Road Inspection & Management System</span>
-                <span class="title-part2">A Pilot on A1 KSM–KKM–Webuye–KTL Rd</span>
+                <span class="title-part2">A Pilot on A1 KKM–Webuye–KTL Rd</span>
             </h1>
         </div>
         <div class="header-controls">
@@ -612,26 +681,47 @@
     <main id="publicReportSection">
         <div id="reportFormContainer">
             <h2>Report a Road Defect</h2>
-            <p>Fill in the details below to submit an inspection report.</p>
+
+            <!-- New Internal Form Toggle -->
+            <div class="form-toggle-switch">
+                <button type="button" id="publicSubmissionToggle" class="form-toggle-button active">Public Submission</button>
+                <button type="button" id="staffSubmissionToggle" class="form-toggle-button">Staff Submission</button>
+            </div>
+
             <form id="defectReportForm">
                 <div class="form-group">
-                    <label for="userId">Your User ID (Optional for Public):</label>
-                    <input type="text" id="userId" name="userId" placeholder="Enter your ID or name">
+                    <label for="userId">Name (Optional):</label>
+                    <input type="text" id="userId" name="userId" placeholder="Enter your name (e.g., John Doe)">
+                </div>
+
+                <div class="form-group staff-field"> <!-- This field is hidden by default for public -->
+                    <label for="reporterRole">Your Role:</label>
+                    <select id="reporterRole" name="reporterRole" required>
+                        <option value="Inspector">Inspector</option>
+                        <option value="Asst Inspector">Asst Inspector</option>
+                        <option value="Engineer">Engineer</option>
+                        <option value="Assistant Engineer">Assistant Engineer</option>
+                        <option value="Senior Engineer">Senior Engineer</option>
+                        <option value="Road Superintendent">Road Superintendent</option>
+                        <option value="Regional Director">Regional Director</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label for="defectType">Defect Type:</label>
                     <select id="defectType" name="defectType" required>
                         <option value="">Select a defect type</option>
-                        <option value="Pothole">Pothole</option>
-                        <option value="Crack">Crack</option>
-                        <option value="Culvert Blockage">Culvert Blockage</option>
-                        <option value="Shoulder Erosion">Shoulder Erosion</option>
-                        <option value="Bridge Damage">Bridge Damage</option>
-                        <option value="Vegetation Overgrowth">Vegetation Overgrowth</option>
-                        <option value="Illegal Signpost">Illegal Signpost</option>
-                        <option value="Encroachment">Encroachment into Road Reserve</option>
-                        <option value="Other">Other</option>
+                        <option value="Pothole">Pothole (e.g., >5cm deep, >30cm wide)</option>
+                        <option value="Crack">Crack (e.g., alligator, longitudinal, transverse)</option>
+                        <option value="Culvert Blockage">Culvert Blockage (e.g., debris, sediment)</option>
+                        <option value="Shoulder Erosion">Shoulder Erosion (e.g., loss of material, drop-off)</option>
+                        <option value="Bridge Damage">Bridge Damage (e.g., structural cracks, railing damage)</option>
+                        <option value="Vegetation Overgrowth">Vegetation Overgrowth (e.g., obstructing visibility, road encroachment)</option>
+                        <option value="Illegal Signpost">Illegal Signpost (e.g., unauthorized advertising)</option>
+                        <option value="Encroachment">Encroachment into Road Reserve (e.g., illegal structures)</option>
+                        <option value="Drainage Issue">Drainage Issue (e.g., standing water, clogged drains)</option>
+                        <option value="Road Sign Damage">Road Sign Damage (e.g., bent, missing, faded)</option>
+                        <option value="Other">Other (Please specify in description)</option>
                     </select>
                 </div>
 
@@ -639,34 +729,34 @@
                     <label for="severityLevel">Severity Level (AI-Suggested or Manual):</label>
                     <select id="severityLevel" name="severityLevel" required>
                         <option value="">Select severity</option>
-                        <option value="Critical">Critical</option>
-                        <option value="High">High</option>
-                        <option value="Medium">Medium</option>
-                        <option value="Low">Low</option>
+                        <option value="Critical">Critical (Immediate safety risk, road closure likely)</option>
+                        <option value="High">High (Urgent repair needed, significant hazard)</option>
+                        <option value="Medium">Medium (Routine repair, minor hazard)</option>
+                        <option value="Low">Low (Minor issue, scheduled maintenance)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="kilometerPost">Kilometer Post (e.g., KM 2+500) / Landmark:</label>
-                    <input type="text" id="kilometerPost" name="kilometerPost" placeholder="e.g., KM 2+500 or Near Odienya Stream" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="currentLocation">Current Location (GPS):</label>
-                    <button type="button" id="getLocationBtn" class="go-back-btn" style="background-color: #17a2b8; margin-top: 5px;">Get My Current Location</button>
+                    <label for="currentLocation">Defect Location (GPS):</label>
+                    <button type="button" id="getLocationBtn" class="go-back-btn" style="background-color: #17a2b8; margin-top: 5px;">Use my Location</button>
                     <input type="text" id="latitudeInput" name="latitude" placeholder="Latitude" readonly style="margin-top: 10px;">
                     <input type="text" id="longitudeInput" name="longitude" placeholder="Longitude" readonly style="margin-top: 10px;">
-                    <small id="locationStatus" style="display: block; margin-top: 5px; color: #666;">Click "Get My Current Location" to get coordinates.</small>
+                    <small id="locationStatus" style="display: block; margin-top: 5px; color: #666;">Click "Use my Location" to get coordinates and estimated KM Post.</small>
                 </div>
 
                 <div class="form-group">
-                    <label for="assetId">Asset ID (for Culverts/Bridges), e.g., C27-CULV-003 (Optional):</label>
-                    <input type="text" id="assetId" name="assetId" placeholder="e.g., C27-CULV-003">
+                    <label for="kilometerPost">Kilometer Post (e.g., KM 2+500) / Landmark:</label>
+                    <input type="text" id="kilometerPost" name="kilometerPost" placeholder="Automatically calculated or enter manually (e.g., KM 2+500, Near Webuye Town)" required>
+                </div>
+
+                <div class="form-group staff-field">
+                    <label for="assetId">Asset ID (e.g., BR-A1-001 for Bridge, CV-A1-005 for Culvert) (Optional):</label>
+                    <input type="text" id="assetId" name="assetId" placeholder="e.g., BR-A1-001 or CV-A1-005">
                 </div>
 
                 <div class="form-group">
                     <label for="description">Description:</label>
-                    <textarea id="description" name="description" rows="4" placeholder="Enter defect details here, e.g., 'Large pothole causing traffic swerving near Odienya stream.'" required></textarea>
+                    <textarea id="description" name="description" rows="4" placeholder="Enter defect details here, e.g., 'Large pothole (approx 50x30x10cm) causing traffic swerving near Odienya stream. Estimated cost: KES 50,000.'"></textarea>
                 </div>
 
                 <div class="form-group">
@@ -676,10 +766,11 @@
                     <div id="imageUploadSuccess" class="upload-success"></div>
                 </div>
 
-                <div class="form-group">
-                    <label for="assignedTeam">Assigned Team/Contractor (Optional - for Staff):</label>
-                    <input type="text" id="assignedTeam" name="assignedTeam" placeholder="e.g., Maintenance Team A or XYZ Contractors">
+                <div class="form-group staff-field">
+                    <label for="assignedTeam">Assigned Team/Contractor (Optional):</label>
+                    <input type="text" id="assignedTeam" name="assignedTeam" placeholder="e.g., Jade Contractors, Internal Team A">
                 </div>
+                <!-- Removed AI Suggested Severity and AI Recommendation from the entry form -->
 
                 <button type="submit">Submit Inspection Report</button>
             </form>
@@ -703,8 +794,14 @@
                 <p id="mapLocationDetails" style="margin-top: 10px; font-style: italic; color: #777;"></p>
             </div>
 
+            <!-- New section for AI Analysis display -->
+            <div class="ai-analysis-display">
+                <strong>AI Suggested Severity:</strong> <span id="displayAiSeverity">N/A</span>
+                <p><strong>AI Recommendation:</strong> <span id="displayAiRecommendation">N/A</span></p>
+            </div>
+
             <div id="snapshotAnalysis">
-                <h4>Snapshot Analysis: A1 KSM–KKM–Webuye–KTL Rd</h4>
+                <h4>Snapshot Analysis: A1 KKM–Webuye–KTL Rd</h4>
                 <div class="stats-container">
                     <div class="stat-box">
                         <span class="stat-value" id="totalActiveReports">0</span>
@@ -754,9 +851,8 @@
         const defectReportForm = document.getElementById('defectReportForm');
         const loadingSpinner = document.getElementById('loadingSpinner');
         const thankYouSection = document.getElementById('thankYouSection');
-        const publicToggle = document.getElementById('publicToggle');
-        // Renamed staffToggle to staffAdminToggle
-        const staffAdminToggle = document.getElementById('staffAdminToggle');
+        const publicToggle = document.getElementById('publicToggle'); // Main header toggle
+        const staffAdminToggle = document.getElementById('staffAdminToggle'); // Main header toggle
         const goBackHomeTopBtn = document.getElementById('goBackHomeTopBtn');
         const imageUploadInput = document.getElementById('imageUpload');
         const imageUploadProgress = document.getElementById('imageUploadProgress');
@@ -765,29 +861,32 @@
         const customAlert = document.getElementById('customAlert');
         const goBackHomeBtn = document.getElementById('goBackHomeBtn');
 
+        const userIdInput = document.getElementById('userId');
+        const reporterRoleSelect = document.getElementById('reporterRole');
+        const descriptionTextarea = document.getElementById('description');
+
         const getLocationBtn = document.getElementById('getLocationBtn');
         const latitudeInput = document.getElementById('latitudeInput');
-        const longitudeInput = document = document.getElementById('longitudeInput');
+        const longitudeInput = document.getElementById('longitudeInput');
+        const kilometerPostInput = document.getElementById('kilometerPost');
         const locationStatus = document.getElementById('locationStatus');
         const defectMapDiv = document.getElementById('defectMap');
         const mapLocationDetails = document.getElementById('mapLocationDetails');
 
+        // Elements for AI analysis display in thank you section
+        const displayAiSeverity = document.getElementById('displayAiSeverity');
+        const displayAiRecommendation = document.getElementById('displayAiRecommendation');
+
+        // New internal form toggle elements
+        const publicSubmissionToggle = document.getElementById('publicSubmissionToggle');
+        const staffSubmissionToggle = document.getElementById('staffSubmissionToggle');
+
+        // Get all elements that are staff-only fields
+        const staffFields = document.querySelectorAll('.staff-field');
+
+
         // --- Google Maps API Key (IMPORTANT: Replace with your actual key) ---
-        // If you are seeing "Oops! Something went wrong" or "RefererNotAllowedMapError",
-        // it means the URL you are viewing this page from is NOT authorized in your Google Cloud Console.
-        // 1. Go to Google Cloud Console (console.cloud.google.com).
-        // 2. Navigate to "APIs & Services" > "Credentials".
-        // 3. Edit your Google Maps API Key.
-        // 4. Under "Application restrictions", select "HTTP referrers (web sites)".
-        // 5. In the "Website restrictions" section, add the EXACT URL(s) you use to access this page.
-        //    Examples:
-        //    - If using a local server: `http://localhost:8080/*`
-        //    - If opening file directly: `file:///*` (this covers all local file paths)
-        //    - If deployed: `https://your-app.web.app/*`
-        // 6. Ensure "Maps JavaScript API" and "Geocoding API" are enabled under "API restrictions".
-        // 7. Click SAVE.
-        // 8. Clear your browser cache and hard refresh the page (Ctrl+Shift+R or Cmd+Shift+R).
-        const GOOGLE_MAPS_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE"; // <<< REPLACED WITH YOUR PROVIDED KEY
+        const GOOGLE_MAPS_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE"; 
 
         let currentMap = null;
 
@@ -813,6 +912,50 @@
             }, duration);
         }
 
+        // Simple Haversine formula for distance between two lat/lng points (in km)
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of Earth in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distance in km
+        }
+
+        // Simulated Chainage Calculation (KM Post)
+        // Assuming A1 KKM-Webuye-KTL Rd starts roughly at Kakamega (KM 0)
+        // and ends near Kitale (approx 120 KM from Kakamega along the road)
+        const KAKAMEGA_LAT = 0.283; // Approximate Kakamega Latitude
+        const KAKAMEGA_LNG = 34.751; // Approximate Kakamega Longitude
+        const KITALE_LAT = 1.02; // Approximate Kitale Latitude
+        const KITALE_LNG = 35.00; // Approximate Kitale Longitude
+        const TOTAL_ROAD_LENGTH_KM = 120; // Approximate length of A1 KKM-Webuye-KTL Rd
+
+        function calculateChainage(currentLat, currentLng) {
+            // Distance from Kakamega (start of road) to current location
+            const distFromKakamega = haversineDistance(KAKAMEGA_LAT, KAKAMEGA_LNG, currentLat, currentLng);
+
+            // Distance from Kakamega to Kitale (total road length for scaling)
+            // In a real scenario, this would be the actual road length, not straight-line.
+            // For simulation, we use a fixed total length.
+            // const totalRoadLength = haversineDistance(KAKAMEGA_LAT, KAKAMEGA_LNG, KITALE_LAT, KITALE_LNG);
+            // Using a fixed TOTAL_ROAD_LENGTH_KM as per requirements for simplicity.
+
+            // Calculate proportional position along the road
+            let chainageKm = distFromKakamega; // Simple direct distance for now
+
+            // Ensure chainage doesn't exceed total road length or go negative
+            chainageKm = Math.max(0, Math.min(chainageKm, TOTAL_ROAD_LENGTH_KM));
+
+            const km = Math.floor(chainageKm);
+            const meters = Math.round((chainageKm - km) * 1000); // Convert remaining decimal to meters
+            return `KM ${km}+${String(meters).padStart(3, '0')}`;
+        }
+
+
         // --- Navigation Control Function ---
         function showForm() {
             thankYouSection.classList.remove('visible');
@@ -823,10 +966,11 @@
             }, 500);
 
             reportFormContainer.classList.remove('hidden');
+            // Reduced auto-scroll speed by increasing the delay before scrolling
             setTimeout(() => {
                 reportFormContainer.classList.remove('form-hidden');
                 reportFormContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 50);
+            }, 3000); // Changed from 200ms to 3000ms (3 seconds)
         }
 
         function showDashboard() {
@@ -864,6 +1008,10 @@
                         const lng = position.coords.longitude;
                         latitudeInput.value = lat.toFixed(6);
                         longitudeInput.value = lng.toFixed(6);
+
+                        // Calculate and set KM Post
+                        kilometerPostInput.value = calculateChainage(lat, lng);
+
                         locationStatus.textContent = 'Location acquired! ✅';
                         locationStatus.style.color = '#28a745';
                         showAlert('Location acquired!', 'success', 1500);
@@ -938,7 +1086,7 @@
             };
         }
 
-        function displayDefectMap(lat, lng) {
+        function displayDefectMap(lat, lng, kilometerPost) {
             // Ensure google.maps object is available before proceeding
             if (!window.google || !window.google.maps) {
                 console.error("Google Maps API not loaded when trying to display map.");
@@ -992,12 +1140,32 @@
                 const geocoder = new google.maps.Geocoder();
                 geocoder.geocode({ 'location': { lat: lat, lng: lng } }, (results, status) => {
                     if (status === 'OK' && results[0]) {
-                        mapLocationDetails.textContent = `Location: ${results[0].formatted_address}`;
+                        let nearestPlaceName = '';
+                        // Try to find a more specific place name (neighborhood, sublocality, locality)
+                        for (let i = 0; i < results[0].address_components.length; i++) {
+                            const component = results[0].address_components[i];
+                            if (component.types.includes('neighborhood') && component.long_name) {
+                                nearestPlaceName = component.long_name;
+                                break;
+                            }
+                            if (component.types.includes('sublocality') && component.long_name && !nearestPlaceName) {
+                                nearestPlaceName = component.long_name;
+                            }
+                            if (component.types.includes('locality') && component.long_name && !nearestPlaceName) {
+                                nearestPlaceName = component.long_name;
+                            }
+                        }
+
+                        let formattedAddress = results[0].formatted_address;
+                        // Attempt to remove the broad county name if a more specific place name is found
+                        if (nearestPlaceName && formattedAddress.includes('Kakamega County')) {
+                            formattedAddress = formattedAddress.replace(', Kakamega County', '');
+                        }
+
+                        mapLocationDetails.textContent = `Location: ${kilometerPost}, ${nearestPlaceName || formattedAddress}`;
                     } else {
                         mapLocationDetails.textContent = `Location: Latitude ${lat.toFixed(6)}, Longitude ${lng.toFixed(6)}`;
                         console.warn('Geocoder failed due to: ' + status);
-                        // If geocoding fails, it's often due to API key restrictions or rate limits.
-                        // The map itself might still work, but address lookup won't.
                     }
                 });
             } catch (mapError) {
@@ -1008,20 +1176,127 @@
             }
         }
 
+        // --- Form Field Visibility Logic based on internal toggle ---
+        function updateFormFieldsForRole(roleType) {
+            // Update active state of the new internal toggle buttons
+            if (roleType === 'public') {
+                publicSubmissionToggle.classList.add('active');
+                staffSubmissionToggle.classList.remove('active');
+
+                // Update Name field label and placeholder
+                document.querySelector('label[for="userId"]').textContent = 'Name (Optional):';
+                userIdInput.placeholder = 'Enter your name (e.g., John Doe)';
+
+                // Set reporter role dropdown to Public User
+                reporterRoleSelect.value = 'Public User'; // This option is now dynamically added/removed
+
+                // Hide staff-only fields
+                staffFields.forEach(field => {
+                    field.classList.add('hidden');
+                    // Also clear values for hidden fields to prevent accidental submission of old data
+                    const input = field.querySelector('input, select, textarea');
+                    if (input) {
+                        input.value = '';
+                        input.removeAttribute('required'); // Ensure hidden fields are not required
+                    }
+                });
+
+                // Make description optional for public
+                descriptionTextarea.removeAttribute('required');
+
+                // Dynamically add "Public User" option if not present
+                if (!reporterRoleSelect.querySelector('option[value="Public User"]')) {
+                    const publicOption = document.createElement('option');
+                    publicOption.value = 'Public User';
+                    publicOption.textContent = 'Public User';
+                    reporterRoleSelect.insertBefore(publicOption, reporterRoleSelect.firstChild);
+                }
+                // Ensure other staff roles are removed if present
+                Array.from(reporterRoleSelect.options).forEach(option => {
+                    if (option.value !== 'Public User') {
+                        option.remove();
+                    }
+                });
+
+
+            } else if (roleType === 'staff') {
+                publicSubmissionToggle.classList.remove('active');
+                staffSubmissionToggle.classList.add('active');
+
+                // Update Name field label and placeholder
+                document.querySelector('label[for="userId"]').textContent = 'Your Name/ID:';
+                userIdInput.placeholder = 'Enter your name or ID';
+
+                // Remove "Public User" option if present
+                const publicOption = reporterRoleSelect.querySelector('option[value="Public User"]');
+                if (publicOption) {
+                    publicOption.remove();
+                }
+
+                // Add staff roles if not present
+                const staffRoles = [
+                    { value: "Inspector", text: "Inspector" },
+                    { value: "Asst Inspector", text: "Asst Inspector" },
+                    { value: "Engineer", text: "Engineer" },
+                    { value: "Assistant Engineer", text: "Assistant Engineer" }, // Added Assistant Engineer
+                    { value: "Senior Engineer", text: "Senior Engineer" },
+                    { value: "Road Superintendent", text: "Road Superintendent" },
+                    { value: "Regional Director", text: "Regional Director" }
+                ];
+
+                // Clear existing options first (except the default "Select severity" for defect type etc.)
+                // This ensures we don't duplicate options on repeated toggles
+                const currentOptions = Array.from(reporterRoleSelect.options).map(o => o.value);
+                staffRoles.forEach(role => {
+                    if (!currentOptions.includes(role.value)) {
+                        const option = document.createElement('option');
+                        option.value = role.value;
+                        option.textContent = role.text;
+                        reporterRoleSelect.appendChild(option);
+                    }
+                });
+
+                // Set reporter role dropdown to a default staff value if currently 'Public User' or empty
+                if (reporterRoleSelect.value === 'Public User' || reporterRoleSelect.value === '') {
+                    reporterRoleSelect.value = 'Inspector'; // Default to Inspector for staff
+                }
+
+                // Show staff-only fields
+                staffFields.forEach(field => {
+                    field.classList.remove('hidden');
+                    // For staff, some fields might be required, but we'll manage that explicitly if needed.
+                    // For now, they are just visible.
+                });
+
+                // Make description required for staff
+                descriptionTextarea.setAttribute('required', 'true');
+            }
+        }
+
 
         // --- Event Listeners ---
 
+        // Main header toggles (reverted to original behavior)
         publicToggle.addEventListener('click', () => {
             publicToggle.classList.add('active');
-            staffAdminToggle.classList.remove('active'); // Ensure staff button is not active
+            staffAdminToggle.classList.remove('active');
+            updateFormFieldsForRole('public'); // Ensure internal form state matches
             showForm();
         });
 
-        // Updated staffAdminToggle to redirect to admin.html
         staffAdminToggle.addEventListener('click', () => {
-            // Instead of an alert, redirect to the admin dashboard page
-            window.location.href = 'admin.html';
+            window.location.href = 'admin.html'; // Redirect to admin.html
         });
+
+        // New internal form toggles
+        publicSubmissionToggle.addEventListener('click', () => {
+            updateFormFieldsForRole('public');
+        });
+
+        staffSubmissionToggle.addEventListener('click', () => {
+            updateFormFieldsForRole('staff');
+        });
+
 
         imageUploadInput.addEventListener('change', async () => {
             const imageFile = imageUploadInput.files[0];
@@ -1079,20 +1354,21 @@
 
             const formData = new FormData(defectReportForm);
             const reportData = {};
-            for (let [key, value] of formData.entries()) {
-                reportData[key] = value;
-            }
 
-            if (reportData.imageUpload) {
-                delete reportData.imageUpload;
-            }
-            reportData.imageUrl = imageUploadInput.dataset.imageUrl || null;
-
+            reportData.userId = formData.get('userId') || 'Anonymous Public User';
+            reportData.reporterRole = formData.get('reporterRole') || 'Public User'; // Ensure it's never unknown
+            reportData.defectType = formData.get('defectType');
+            reportData.severityLevel = formData.get('severityLevel');
+            reportData.kilometerPost = formData.get('kilometerPost');
             reportData.latitude = latitudeInput.value ? parseFloat(latitudeInput.value) : null;
             reportData.longitude = longitudeInput.value ? parseFloat(longitudeInput.value) : null;
+            reportData.assetId = formData.get('assetId') || null;
+            reportData.description = formData.get('description');
+            reportData.imageUrl = imageUploadInput.dataset.imageUrl || null;
+            reportData.assignedTeam = formData.get('assignedTeam') || 'N/A'; // Changed from Unassigned to N/A
 
             reportData.timestamp = firebase.firestore.FieldValue.serverTimestamp();
-            reportData.status = 'Reported';
+            reportData.status = 'Reported'; // Initial status
 
             await saveReportToFirestore(reportData);
         });
@@ -1100,10 +1376,12 @@
 
         async function saveReportToFirestore(reportData) {
             try {
+                // AI Validation Protocol: Simulate AI analysis before saving
                 const aiAnalysis = simulateAIAnalysis(reportData);
                 reportData.aiSeverity = aiAnalysis.severity;
                 reportData.aiRecommendation = aiAnalysis.recommendation;
 
+                // Check for duplicate reports (simple check based on description and KM Post)
                 const querySnapshot = await db.collection('reports')
                     .where('description', '==', reportData.description)
                     .where('kilometerPost', '==', reportData.kilometerPost)
@@ -1124,6 +1402,7 @@
                     return;
                 }
 
+                // Save report to Firestore
                 await db.collection('reports').add(reportData);
 
                 showAlert('Report submitted successfully! 🎉');
@@ -1131,6 +1410,7 @@
                 loadingSpinner.classList.remove('visible');
                 setTimeout(() => loadingSpinner.classList.add('hidden'), 300);
 
+                // Reset form and status messages
                 defectReportForm.reset();
                 imageUploadInput.dataset.imageUrl = '';
                 imageUploadProgress.style.width = '0%';
@@ -1138,7 +1418,8 @@
                 
                 latitudeInput.value = '';
                 longitudeInput.value = '';
-                locationStatus.textContent = 'Click "Get My Current Location" to get coordinates.';
+                kilometerPostInput.value = ''; // Clear KM Post
+                locationStatus.textContent = 'Click "Use my Location" to get coordinates and estimated KM Post.'; // Updated text
                 locationStatus.style.color = '#666';
 
 
@@ -1149,9 +1430,13 @@
                     submitButton.disabled = false;
                     submitButton.textContent = 'Submit Inspection Report';
 
+                    // Update AI analysis display in thank you section
+                    displayAiSeverity.textContent = reportData.aiSeverity || 'N/A';
+                    displayAiRecommendation.textContent = reportData.aiRecommendation || 'N/A';
+
                     // Only try to display map if Google Maps API is loaded
                     if (window.google && window.google.maps) {
-                        displayDefectMap(reportData.latitude, reportData.longitude);
+                        displayDefectMap(reportData.latitude, reportData.longitude, reportData.kilometerPost);
                     } else {
                         console.warn("Google Maps API not fully loaded for map display after report submission.");
                         defectMapDiv.innerHTML = "<p style='color:red;'>Map could not load. Check API key and console for errors.</p>";
@@ -1176,8 +1461,14 @@
             }
         }
 
-        goBackHomeBtn.addEventListener('click', showForm);
-        goBackHomeTopBtn.addEventListener('click', showForm);
+        goBackHomeBtn.addEventListener('click', () => {
+            updateFormFieldsForRole('public'); // Reset to public view
+            showForm();
+        }); 
+        goBackHomeTopBtn.addEventListener('click', () => {
+            updateFormFieldsForRole('public'); // Reset to public view
+            showForm();
+        });
 
 
         // --- Real-time Data Visualization (Public View) ---
@@ -1194,10 +1485,11 @@
 
         function updatePublicDashboard(reports) {
             let totalActive = reports.filter(r => r.status !== 'Resolved' && r.status !== 'Deferred').length;
-            let criticalToday = reports.filter(r => r.aiSeverity === 'Critical' && r.timestamp && isToday(r.timestamp.toDate())).length;
+            // Use aiSeverity for critical issues
+            let criticalIssuesToday = reports.filter(r => r.aiSeverity === 'Critical' && r.timestamp && isToday(r.timestamp.toDate())).length;
 
             totalActiveReportsSpan.textContent = totalActive;
-            criticalIssuesTodaySpan.textContent = criticalToday;
+            criticalIssuesTodaySpan.textContent = criticalIssuesToday;
             lastUpdatedTimestampSpan.textContent = new Date().toLocaleString();
 
             const defectCounts = {};
@@ -1272,47 +1564,57 @@
                    someDate.getFullYear() === today.getFullYear();
         }
 
+        // AI Simulation Function - Enhanced for clearer criteria and impact
         function simulateAIAnalysis(report) {
             let severity = 'Medium';
-            let recommendation = 'Standard maintenance required.';
+            let recommendation = 'Standard maintenance required. Estimated cost: KES 20,000.';
 
             const lowerDescription = (report.description || '').toLowerCase();
             const lowerDefectType = (report.defectType || '').toLowerCase();
+            const userSeverity = report.severityLevel; // User's selected severity
 
-            if (lowerDescription.includes('large pothole') || lowerDescription.includes('collapsed culvert') || lowerDescription.includes('severe crack') || lowerDescription.includes('impassable') || lowerDescription.includes('accident prone')) {
-                severity = 'Critical';
-                recommendation = 'Immediate attention required: severe hazard, close section if necessary.';
-            } else if (lowerDescription.includes('significant crack') || lowerDescription.includes('major blockage') || lowerDescription.includes('medium pothole') || lowerDescription.includes('dangerous')) {
-                severity = 'High';
-                recommendation = 'Urgent repair needed, schedule within 1-3 days.';
-            } else if (lowerDescription.includes('small crack') || lowerDescription.includes('minor erosion') || lowerDescription.includes('bushes') || lowerDescription.includes('overgrowth')) {
-                severity = 'Low';
-                recommendation = 'Add to routine maintenance schedule.';
+            // Prioritize user's manual severity if provided and valid
+            if (userSeverity && ['Critical', 'High', 'Medium', 'Low'].includes(userSeverity)) {
+                severity = userSeverity;
             }
 
-            if (lowerDefectType === 'encroachment') {
+            // AI analysis based on keywords and defect types
+            if (lowerDescription.includes('large pothole') || lowerDescription.includes('collapsed culvert') || lowerDescription.includes('severe crack') || lowerDescription.includes('impassable') || lowerDescription.includes('accident prone') || lowerDefectType === 'bridge damage') {
+                severity = 'Critical';
+                recommendation = 'Immediate attention required: severe hazard, potential road closure. Estimated cost: KES 500,000+.';
+            } else if (lowerDescription.includes('significant crack') || lowerDescription.includes('major blockage') || lowerDescription.includes('medium pothole') || lowerDescription.includes('dangerous') || lowerDefectType === 'culvert blockage' || lowerDefectType === 'encroachment') {
+                if (severity !== 'Critical') severity = 'High'; // Don't downgrade from Critical
+                recommendation = 'Urgent repair needed, schedule within 1-3 days. Significant hazard. Estimated cost: KES 100,000 - 500,000.';
+            } else if (lowerDescription.includes('small crack') || lowerDescription.includes('minor erosion') || lowerDescription.includes('bushes') || lowerDescription.includes('overgrowth') || lowerDefectType === 'shoulder erosion' || lowerDefectType === 'illegal signpost' || lowerDefectType === 'drainage issue' || lowerDefectType === 'road sign damage') {
+                if (severity !== 'Critical' && severity !== 'High') severity = 'Medium'; // Don't downgrade from higher
+                recommendation = 'Routine maintenance required, address within 1-2 weeks. Minor hazard. Estimated cost: KES 20,000 - 100,000.';
+            } else {
+                if (severity !== 'Critical' && severity !== 'High' && severity !== 'Medium') severity = 'Low'; // Don't downgrade from higher
+                recommendation = 'Add to routine inspection/maintenance schedule. Minimal immediate impact. Estimated cost: KES <20,000.';
+            }
+
+            // Refine recommendations based on specific defect types if not already high severity
+            if (lowerDefectType === 'encroachment' && severity !== 'Critical' && severity !== 'High') {
                 severity = 'High';
-                recommendation = 'Notify legal and enforcement team for immediate action. Document thoroughly.';
-            } else if (lowerDefectType === 'illegal signpost') {
+                recommendation = 'Notify legal and enforcement team for immediate action. Document thoroughly. Estimated cost: Legal/removal fees.';
+            } else if (lowerDefectType === 'illegal signpost' && severity !== 'Critical' && severity !== 'High') {
                 severity = 'Medium';
-                recommendation = 'Dispatch team for signpost removal and fine assessment.';
+                recommendation = 'Dispatch team for signpost removal and fine assessment. Estimated cost: Removal fees.';
             } else if (lowerDefectType === 'culvert blockage' && severity !== 'Critical') {
                 severity = 'High';
-                recommendation = 'Urgent clearing of debris to prevent flooding/road damage.';
+                recommendation = 'Urgent clearing of debris to prevent flooding/road damage. Estimated cost: KES 50,000 - 200,000.';
             } else if (lowerDefectType === 'pothole' && severity === 'Medium') {
-                recommendation = 'Patching required within a week.';
+                recommendation = 'Patching required within a week. Estimated cost: KES 20,000 - 50,000 per pothole.';
             } else if (lowerDefectType === 'shoulder erosion' && severity === 'Medium') {
-                recommendation = 'Resurfacing or gabion placement recommended.';
-            }
-
-            if (report.severityLevel && ['Critical', 'High', 'Medium', 'Low'].includes(report.severityLevel)) {
-                 severity = report.severityLevel;
+                recommendation = 'Resurfacing or gabion placement recommended. Estimated cost: KES 30,000 - 150,000.';
             }
 
             return { severity, recommendation };
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize form to public view on load
+            updateFormFieldsForRole('public'); // Initialize the new internal toggle to public
             showForm();
 
             loadingSpinner.classList.add('hidden');
@@ -1320,6 +1622,7 @@
             goBackHomeTopBtn.classList.add('hidden');
             customAlert.classList.add('hidden');
 
+            // Set the main header public toggle as active by default
             publicToggle.classList.add('active');
             staffAdminToggle.classList.remove('active');
         });
