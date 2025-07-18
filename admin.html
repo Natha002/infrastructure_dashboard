@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff / Admin Dashboard</title>
+    <title>AI-Powered Road Inspection and Management System: A Pilot on C33 Kakamega–Mumias Corridor, Kenya</title>
     <link rel="icon" href="logo.png" type="image/png">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
@@ -125,7 +125,47 @@
             margin-bottom: 20px;
             border-bottom: 1px solid #eee;
             padding-bottom: 10px;
+            text-align: center; /* Centered this heading */
+            position: relative; /* For tooltip */
+            cursor: help; /* Indicate hoverable */
         }
+
+        /* Tooltip for H3 */
+        .h3-tooltip {
+            visibility: hidden;
+            width: 250px; /* Wider for more descriptive text */
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%; /* Position above the heading */
+            left: 50%;
+            margin-left: -125px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 0.8em;
+            white-space: normal;
+        }
+
+        .h3-tooltip::after {
+            content: " ";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .dashboard-section h3:hover .h3-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
 
         .stats-container {
             display: flex;
@@ -145,6 +185,8 @@
             max-width: 30%; /* More boxes, smaller width */
             text-align: center;
             box-sizing: border-box;
+            position: relative; /* Needed for tooltip positioning */
+            cursor: help; /* Indicate hoverable */
         }
 
         .stat-value {
@@ -159,6 +201,43 @@
             font-size: 0.9em;
             color: #777;
         }
+
+        /* Tooltip styles for stat boxes */
+        .stat-tooltip {
+            visibility: hidden;
+            width: 160px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 100%; /* Position above the stat box */
+            left: 50%;
+            margin-left: -80px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-size: 0.8em;
+            white-space: normal; /* Allow text to wrap */
+        }
+
+        .stat-tooltip::after {
+            content: " ";
+            position: absolute;
+            top: 100%; /* At the bottom of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+
+        .stat-box:hover .stat-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
 
         .chart-container {
             background-color: #fff;
@@ -207,7 +286,7 @@
         .reports-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px; /* Ensure table doesn't get too squished */
+            min-width: 1000px; /* Ensure table doesn't get too squished */
         }
 
         .reports-table th, .reports-table td {
@@ -242,6 +321,27 @@
         .reports-table td.status-in-progress { color: #ffc107; font-weight: bold; } /* Yellow */
         .reports-table td.status-resolved { color: #28a745; font-weight: bold; } /* Green */
         .reports-table td.status-deferred { color: #6c757d; font-weight: bold; } /* Grey */
+
+        /* Specific style for the status column to prevent wrapping and ensure visibility */
+        .reports-table td:nth-child(9) { /* Assuming Status is the 9th column (index 8) */
+            width: 150px; /* Increased width to ensure dropdown fits fully */
+        }
+
+        /* Inline editing styles (now only for Status) */
+        .editable-select {
+            width: 100%; /* Make select take full width of its cell */
+            min-width: 100px; /* Ensure a minimum width for the select itself */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 0.9em;
+        }
+        .editable-select:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
 
         /* Export Buttons */
         .export-buttons {
@@ -316,6 +416,74 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Filter Controls */
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            justify-content: center;
+            padding: 15px;
+            background-color: #e9eef5;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .filter-controls label {
+            font-weight: bold;
+            color: #555;
+            margin-right: 5px;
+        }
+        .filter-controls select, .filter-controls input[type="date"], .filter-controls input[type="text"] {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.9em;
+            min-width: 150px;
+        }
+        .filter-controls button {
+            padding: 8px 15px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+        .filter-controls .apply-filters-btn { /* Green for Apply */
+            background-color: #28a745;
+        }
+        .filter-controls .apply-filters-btn:hover {
+            background-color: #218838;
+        }
+        .filter-controls .clear-filters-btn { /* Red for Clear */
+            background-color: #dc3545;
+        }
+        .filter-controls .clear-filters-btn:hover {
+            background-color: #c82333;
+        }
+
+        .map-filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            justify-content: center;
+            padding: 10px;
+            background-color: #e0e7ed;
+            border-radius: 6px;
+        }
+        .map-filter-controls label {
+            font-weight: bold;
+            color: #444;
+            margin-right: 5px;
+        }
+        .map-filter-controls select {
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
 
         /* Responsive Design for admin.html */
         @media (max-width: 1024px) {
@@ -328,7 +496,7 @@
                 max-width: 48%; /* Allow two boxes per row on tablets */
             }
             .chart-container {
-                max-width: 100%; /* Full width for charts */
+                max-width: 100%;
             }
             .admin-map-container {
                 max-width: 100%;
@@ -355,32 +523,41 @@
                 font-size: 1.5em;
             }
             .stat-box {
-                max-width: 100%; /* Stack stat boxes vertically on mobile */
+                max-width: 100%;
                 flex-basis: 100%;
             }
             .stats-container {
                 flex-direction: column;
             }
             .reports-table {
-                min-width: 600px; /* Keep a minimum width for the table */
+                min-width: 600px;
             }
             .reports-table th, .reports-table td {
-                padding: 8px 10px; /* Smaller padding for table cells */
+                padding: 8px 10px;
                 font-size: 0.85em;
             }
             .reports-table td img {
                 max-width: 80px;
                 max-height: 60px;
+                object-fit: cover;
             }
             .chart-container {
-                height: 300px; /* Adjust height for mobile */
+                height: 300px;
             }
             #adminDefectMap {
-                height: 300px; /* Smaller map on mobile */
+                height: 300px;
             }
             .export-buttons button {
                 width: 100%;
                 margin: 5px 0;
+            }
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .map-filter-controls {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
@@ -401,19 +578,25 @@
 
         <!-- Public-like Snapshot Analysis -->
         <div class="dashboard-section">
-            <h3>Overall Summary</h3>
+            <h3 id="overallSummaryHeading">
+                Overall Summary
+                <span class="h3-tooltip">A quick overview of all road defect reports, including active, critical, and resolved issues.</span>
+            </h3>
             <div class="stats-container">
                 <div class="stat-box">
                     <span class="stat-value" id="totalActiveReportsAdmin">0</span>
                     <span class="stat-label">Total Active Reports</span>
+                    <span class="stat-tooltip">Number of reports that are currently open and require action.</span>
                 </div>
                 <div class="stat-box">
                     <span class="stat-value" id="criticalIssuesTodayAdmin">0</span>
                     <span class="stat-label">Critical Issues Reported Today</span>
+                    <span class="stat-tooltip">Count of high-priority defects reported within the last 24 hours.</span>
                 </div>
                 <div class="stat-box">
                     <span class="stat-value" id="totalResolvedReports">0</span>
                     <span class="stat-label">Total Resolved Reports</span>
+                    <span class="stat-tooltip">Cumulative number of all reports that have been successfully addressed and closed.</span>
                 </div>
             </div>
             <div class="chart-container">
@@ -424,33 +607,42 @@
 
         <!-- New Summary Statistics -->
         <div class="dashboard-section">
-            <h3>Detailed Breakdown</h3>
+            <h3>
+                Detailed Breakdown
+                <span class="h3-tooltip">Further analysis of reports by severity and the type of reporter (public vs. staff).</span>
+            </h3>
             <div class="stats-container">
                 <div class="stat-box">
                     <span class="stat-value" id="severityHigh">0</span>
                     <span class="stat-label">High Severity Defects</span>
+                    <span class="stat-tooltip">Number of defects classified as high severity, indicating urgent repair needs.</span>
                 </div>
                 <div class="stat-box">
                     <span class="stat-value" id="severityMedium">0</span>
                     <span class="stat-label">Medium Severity Defects</span>
+                    <span class="stat-tooltip">Number of defects classified as medium severity, requiring routine repair.</span>
                 </div>
                 <div class="stat-box">
                     <span class="stat-value" id="severityLow">0</span>
                     <span class="stat-label">Low Severity Defects</span>
+                    <span class="stat-tooltip">Number of defects classified as low severity, indicating minor issues for scheduled maintenance.</span>
                 </div>
             </div>
             <div class="stats-container">
                 <div class="stat-box">
                     <span class="stat-value" id="reportsByPublic">0</span>
                     <span class="stat-label">Reports by Public</span>
+                    <span class="stat-tooltip">Total reports submitted by the general public.</span>
                 </div>
                 <div class="stat-box">
                     <span class="stat-value" id="reportsByStaff">0</span>
                     <span class="stat-label">Reports by Staff</span>
+                    <span class="stat-tooltip">Total reports submitted by authorized KeNHA personnel.</span>
                 </div>
                 <div class="stat-box">
                     <span class="stat-value" id="reportsByUnknownRole">0</span>
                     <span class="stat-label">Reports by Unknown Role</span>
+                    <span class="stat-tooltip">Reports where the reporter's role could not be identified.</span>
                 </div>
             </div>
             <!-- More detailed charts can go here if needed -->
@@ -459,6 +651,32 @@
         <!-- Defect Locations Map View -->
         <div class="dashboard-section admin-map-container">
             <h3>Defect Locations (Map View)</h3>
+            <div class="map-filter-controls">
+                <label for="filterMapDefectType">Defect Type:</label>
+                <select id="filterMapDefectType">
+                    <option value="">All</option>
+                    <option value="Pothole">Pothole</option>
+                    <option value="Crack">Crack</option>
+                    <option value="Culvert Blockage">Culvert Blockage</option>
+                    <option value="Shoulder Erosion">Shoulder Erosion</option>
+                    <option value="Bridge Damage">Bridge Damage</option>
+                    <option value="Vegetation Overgrowth">Vegetation Overgrowth</option>
+                    <option value="Illegal Signpost">Illegal Signpost</option>
+                    <option value="Encroachment">Encroachment</option>
+                    <option value="Drainage Issue">Drainage Issue</option>
+                    <option value="Road Sign Damage">Road Sign Damage</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="filterMapSeverity">Severity:</label>
+                <select id="filterMapSeverity">
+                    <option value="">All</option>
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+            </div>
             <div id="adminDefectMap"></div>
             <p id="adminMapStatus" style="margin-top: 10px; font-style: italic; color: #777;">Loading map...</p>
         </div>
@@ -466,21 +684,72 @@
         <!-- Recent Road Inspection Reports Table -->
         <div class="dashboard-section">
             <h3>Recent Road Inspection Reports</h3>
+
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <label for="filterDefectType">Defect Type:</label>
+                <select id="filterDefectType">
+                    <option value="">All</option>
+                    <option value="Pothole">Pothole</option>
+                    <option value="Crack">Crack</option>
+                    <option value="Culvert Blockage">Culvert Blockage</option>
+                    <option value="Shoulder Erosion">Shoulder Erosion</option>
+                    <option value="Bridge Damage">Bridge Damage</option>
+                    <option value="Vegetation Overgrowth">Vegetation Overgrowth</option>
+                    <option value="Illegal Signpost">Illegal Signpost</option>
+                    <option value="Encroachment">Encroachment</option>
+                    <option value="Drainage Issue">Drainage Issue</option>
+                    <option value="Road Sign Damage">Road Sign Damage</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="filterSeverity">Severity:</label>
+                <select id="filterSeverity">
+                    <option value="">All</option>
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                </select>
+
+                <label for="filterStatus">Status:</label>
+                <select id="filterStatus">
+                    <option value="">All</option>
+                    <option value="Reported">Reported</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Deferred">Deferred</option>
+                </select>
+
+                <label for="filterAssignedTeam">Assigned Team:</label>
+                <input type="text" id="filterAssignedTeam" placeholder="Filter by team name">
+
+                <label for="filterStartDate">From Date:</label>
+                <input type="date" id="filterStartDate">
+
+                <label for="filterEndDate">To Date:</label>
+                <input type="date" id="filterEndDate">
+
+                <button id="applyFiltersBtn" class="apply-filters-btn">Apply Filters</button>
+                <button id="clearFiltersBtn" class="clear-filters-btn">Clear Filters</button>
+            </div>
+
+
             <div class="reports-table-container">
                 <table class="reports-table">
                     <thead>
                         <tr>
                             <th>Reporter Role</th>
+                            <th>User ID</th>
                             <th>Type</th>
-                            <th>Severity</th>
+                            <th>Severity (User)</th>
                             <th>Location (KM Post)</th>
                             <th>Asset ID</th>
-                            <th>Message</th>
-                            <th>Image</th>
-                            <th>Timestamp</th>
+                            <th>Description</th>
+                            <th>Image / Timestamp</th>
                             <th>Status</th>
                             <th>Assigned To</th>
-                            <th>AI Analysis</th>
+                            <th>AI Recommendation</th>
                         </tr>
                     </thead>
                     <tbody id="reportsTableBody">
@@ -534,7 +803,7 @@
 
         // --- Google Maps API Key (IMPORTANT: Replace this with your actual, restricted Google Maps API Key) ---
         // You MUST get this from Google Cloud Console (console.cloud.google.com)
-        // 1. Enable "Maps JavaScript API" and "Geocoding API" for your project.
+        // 1. Enable "Maps JavaScript API", "Geocoding API", and "Geolocation API" for your project.
         // 2. Create an API key and restrict it to "HTTP referrers (web sites)".
         // 3. Add your local testing URLs (e.g., http://localhost:8080/* and file:///*)
         //    and any deployed website URLs (e.g., https://your-app.web.app/*) to the restrictions.
@@ -553,6 +822,7 @@
         const pdfLoadingOverlay = document.getElementById('pdfLoadingOverlay'); // PDF loading overlay
 
         // Admin Dashboard Stats
+        const overallSummaryHeading = document.getElementById('overallSummaryHeading'); // New: Get the h3 element
         const totalActiveReportsAdminSpan = document.getElementById('totalActiveReportsAdmin');
         const criticalIssuesTodayAdminSpan = document.getElementById('criticalIssuesTodayAdmin');
         const totalResolvedReportsSpan = document.getElementById('totalResolvedReports');
@@ -566,8 +836,25 @@
         const reportsByStaffSpan = document.getElementById('reportsByStaff');
         const reportsByUnknownRoleSpan = document.getElementById('reportsByUnknownRole');
 
+        // Table Filter elements
+        const filterDefectType = document.getElementById('filterDefectType');
+        const filterSeverity = document.getElementById('filterSeverity');
+        const filterStatus = document.getElementById('filterStatus');
+        const filterAssignedTeam = document.getElementById('filterAssignedTeam');
+        const filterStartDate = document.getElementById('filterStartDate');
+        const filterEndDate = document.getElementById('filterEndDate');
+        const applyFiltersBtn = document.getElementById('applyFiltersBtn');
+        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+
+        // Map Filter elements
+        const filterMapDefectType = document.getElementById('filterMapDefectType');
+        const filterMapSeverity = document.getElementById('filterMapSeverity');
+
+
         let adminDefectsByTypeChart; // Chart instance for admin dashboard
-        let allReportsData = []; // Store all reports for export
+        let allReportsData = []; // Store all reports fetched from Firestore
+        let filteredReportsData = []; // Store currently filtered reports (after table filters)
+        let currentInfoWindow = null; // To keep track of the currently open InfoWindow
 
         // --- Utility Functions ---
         function isToday(someDate) {
@@ -585,30 +872,168 @@
             return 'N/A';
         }
 
+        // Simple Haversine formula for distance between two lat/lng points (in km)
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of Earth in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c; // Distance in km
+        }
+
+        // Simulated Chainage Calculation (KM Post) - Consistent with index.html
+        const KAKAMEGA_LAT = 0.283; // Approximate Kakamega Latitude
+        const KAKAMEGA_LNG = 34.751; // Approximate Kakamega Longitude
+        const KITALE_LAT = 1.02; // Approximate Kitale Latitude
+        const KITALE_LNG = 35.00; // Approximate Kitale Longitude
+        const TOTAL_ROAD_LENGTH_KM = 120; // Approximate length of A1 KKM-Webuye-KTL Rd
+
+        function calculateChainage(currentLat, currentLng) {
+            if (!currentLat || !currentLng) return 'N/A';
+            const distFromKakamega = haversineDistance(KAKAMEGA_LAT, KAKAMEGA_LNG, currentLat, currentLng);
+            let chainageKm = distFromKakamega;
+            chainageKm = Math.max(0, Math.min(chainageKm, TOTAL_ROAD_LENGTH_KM));
+            const km = Math.floor(chainageKm);
+            const meters = Math.round((chainageKm - km) * 1000);
+            return `KM ${km}+${String(meters).padStart(3, '0')}`;
+        }
+
+
+        // AI Simulation Function - Enhanced for clearer criteria and impact (Consistent with index.html)
+        function simulateAIAnalysis(report) {
+            let severity = 'Medium';
+            let recommendation = 'Standard maintenance required. Estimated cost: KES 20,000.';
+
+            const lowerDescription = (report.description || '').toLowerCase();
+            const lowerDefectType = (report.defectType || '').toLowerCase();
+            const userSeverity = report.severityLevel; // User's selected severity
+
+            // Prioritize user's manual severity if provided and valid
+            if (userSeverity && ['Critical', 'High', 'Medium', 'Low'].includes(userSeverity)) {
+                severity = userSeverity;
+            }
+
+            // AI analysis based on keywords and defect types
+            if (lowerDescription.includes('large pothole') || lowerDescription.includes('collapsed culvert') || lowerDescription.includes('severe crack') || lowerDescription.includes('impassable') || lowerDescription.includes('accident prone') || lowerDefectType === 'bridge damage') {
+                severity = 'Critical';
+                recommendation = 'Immediate attention required: severe hazard, potential road closure. Estimated cost: KES 500,000+.';
+            } else if (lowerDescription.includes('significant crack') || lowerDescription.includes('major blockage') || lowerDescription.includes('medium pothole') || lowerDescription.includes('dangerous') || lowerDefectType === 'culvert blockage' || lowerDefectType === 'encroachment') {
+                if (severity !== 'Critical') severity = 'High'; // Don't downgrade from Critical
+                recommendation = 'Urgent repair needed, schedule within 1-3 days. Significant hazard. Estimated cost: KES 100,000 - 500,000.';
+            } else if (lowerDescription.includes('small crack') || lowerDescription.includes('minor erosion') || lowerDescription.includes('bushes') || lowerDescription.includes('overgrowth') || lowerDefectType === 'shoulder erosion' || lowerDefectType === 'illegal signpost' || lowerDefectType === 'drainage issue' || lowerDefectType === 'road sign damage') {
+                if (severity !== 'Critical' && severity !== 'High') severity = 'Medium'; // Don't downgrade from higher
+                recommendation = 'Routine maintenance required, address within 1-2 weeks. Minor hazard. Estimated cost: KES 20,000 - 100,000.';
+            } else {
+                if (severity !== 'Critical' && severity !== 'High' && severity !== 'Medium') severity = 'Low'; // Don't downgrade from higher
+                recommendation = 'Add to routine inspection/maintenance schedule. Minimal immediate impact. Estimated cost: KES <20,000.';
+            }
+
+            // Refine recommendations based on specific defect types if not already high severity
+            if (lowerDefectType === 'encroachment' && severity !== 'Critical' && severity !== 'High') {
+                severity = 'High';
+                recommendation = 'Notify legal and enforcement team for immediate action. Document thoroughly. Estimated cost: Legal/removal fees.';
+            } else if (lowerDefectType === 'illegal signpost' && severity !== 'Critical' && severity !== 'High') {
+                severity = 'Medium';
+                recommendation = 'Dispatch team for signpost removal and fine assessment. Estimated cost: Removal fees.';
+            } else if (lowerDefectType === 'culvert blockage' && severity !== 'Critical') {
+                severity = 'High';
+                recommendation = 'Urgent clearing of debris to prevent flooding/road damage. Estimated cost: KES 50,000 - 200,000.';
+            } else if (lowerDefectType === 'pothole' && severity === 'Medium') {
+                recommendation = 'Patching required within a week. Estimated cost: KES 20,000 - 50,000 per pothole.';
+            } else if (lowerDefectType === 'shoulder erosion' && severity === 'Medium') {
+                recommendation = 'Resurfacing or gabion placement recommended. Estimated cost: KES 30,000 - 150,000.';
+            }
+
+            return { severity, recommendation };
+        }
+
         // --- Google Maps Integration for Admin Dashboard ---
         let adminMap = null; // To store the admin Google Map instance
+        let adminMapMarkers = []; // To store markers for clearing
 
         function loadGoogleMapsScript(callback) {
             if (window.google && window.google.maps) {
                 callback();
                 return;
             }
+            if (document.getElementById('googleMapsScriptAdmin')) {
+                window.initAdminMapPlaceholder = callback;
+                return;
+            }
             const script = document.createElement('script');
+            script.id = 'googleMapsScriptAdmin';
             script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initAdminMapPlaceholder`;
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);
 
             window.initAdminMapPlaceholder = callback; // Global callback for Google Maps
+            script.onerror = () => {
+                console.error("Failed to load Google Maps JavaScript API script for admin dashboard.");
+                adminMapStatus.textContent = "Error loading map. Check API key and console for details.";
+                adminDefectMapDiv.innerHTML = "<p style='color:red;'>Error loading map. Please ensure your API key is correct and authorized for this domain.</p>";
+            };
         }
 
         function displayAdminDefectMap(reports) {
-            // Filter reports that have valid latitude and longitude
-            const reportsWithLocation = reports.filter(r => r.latitude && r.longitude);
+            if (!window.google || !window.google.maps) {
+                console.error("Google Maps API not loaded when trying to display admin map.");
+                adminDefectMapDiv.innerHTML = "<p style='color:red;'>Map API not ready. Please try refreshing the page.</p>";
+                adminMapStatus.textContent = "Map unavailable.";
+                return;
+            }
+
+            // Clear existing markers
+            adminMapMarkers.forEach(marker => marker.setMap(null));
+            adminMapMarkers = [];
+
+            // Close any open info window when re-displaying map data
+            if (currentInfoWindow) {
+                currentInfoWindow.close();
+                currentInfoWindow = null;
+            }
+
+            // Apply map-specific filters on the reports passed in (which are already table-filtered)
+            let reportsToMap = [...reports]; // Clone to avoid modifying the original filteredReportsData
+            const mapTypeFilter = filterMapDefectType.value;
+            const mapSeverityFilter = filterMapSeverity.value;
+
+            if (mapTypeFilter) {
+                reportsToMap = reportsToMap.filter(report => report.defectType === mapTypeFilter);
+            }
+            if (mapSeverityFilter) {
+                reportsToMap = reportsToMap.filter(report => (report.severityLevel === mapSeverityFilter || report.aiSeverity === mapSeverityFilter));
+            }
+
+            const reportsWithLocation = reportsToMap.filter(r => r.latitude && r.longitude);
 
             if (reportsWithLocation.length === 0) {
-                adminDefectMapDiv.innerHTML = "<p>No location data available for any reports.</p>";
-                adminMapStatus.textContent = "No reports with location data to display.";
+                // Keep the map canvas, just clear markers and reset view
+                if (adminMap) { // Only reset if map is already initialized
+                    adminMap.setCenter({ lat: KAKAMEGA_LAT, lng: KAKAMEGA_LNG });
+                    adminMap.setZoom(8);
+                } else { // Initialize with default if not yet initialized
+                    adminMap = new google.maps.Map(adminDefectMapDiv, {
+                        center: { lat: KAKAMEGA_LAT, lng: KAKAMEGA_LNG },
+                        zoom: 8,
+                        mapTypeId: 'roadmap',
+                        fullscreenControl: true,
+                        streetViewControl: false,
+                        mapTypeControl: true,
+                        zoomControl: true,
+                    });
+                    adminMap.addListener('click', () => {
+                        if (currentInfoWindow) {
+                            currentInfoWindow.close();
+                            currentInfoWindow = null;
+                        }
+                    });
+                }
+                adminMapStatus.textContent = "No reports with location data for current filters.";
                 return;
             }
 
@@ -621,100 +1046,178 @@
             const centerLat = latSum / reportsWithLocation.length;
             const centerLng = lngSum / reportsWithLocation.length;
 
-            const mapOptions = {
-                center: { lat: centerLat, lng: centerLng },
-                zoom: 10, // A good zoom level to see multiple defects
-                mapTypeId: 'roadmap',
-                fullscreenControl: true,
-                streetViewControl: false,
-                mapTypeControl: true,
-                zoomControl: true,
-            };
-
-            if (adminMap) {
-                adminMap.setCenter(mapOptions.center);
-                adminMap.setZoom(mapOptions.zoom);
-                // Clear existing markers if any
-                if (adminMap.markers) {
-                    adminMap.markers.forEach(marker => marker.setMap(null));
-                }
-                adminMap.markers = [];
+            if (!adminMap) {
+                adminMap = new google.maps.Map(adminDefectMapDiv, {
+                    center: { lat: centerLat, lng: centerLng },
+                    zoom: 10, // A good zoom level to see multiple defects
+                    mapTypeId: 'roadmap',
+                    fullscreenControl: true,
+                    streetViewControl: false,
+                    mapTypeControl: true,
+                    zoomControl: true,
+                });
+                adminMap.addListener('click', () => {
+                    if (currentInfoWindow) {
+                        currentInfoWindow.close();
+                        currentInfoWindow = null;
+                    }
+                });
             } else {
-                adminMap = new google.maps.Map(adminDefectMapDiv, mapOptions);
-                adminMap.markers = [];
+                adminMap.setCenter({ lat: centerLat, lng: centerLng });
+                adminMap.setZoom(Math.min(12, Math.max(8, reportsWithLocation.length > 1 ? 10 : 15))); // Adjust zoom based on number of reports
             }
 
-            // Add markers for each report
+            const infoWindow = new google.maps.InfoWindow(); // Single info window
+
             reportsWithLocation.forEach(report => {
+                let markerColor = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'; // Default
+                if (report.aiSeverity === 'Critical') {
+                    markerColor = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+                } else if (report.aiSeverity === 'High') {
+                    markerColor = 'http://maps.google.com/mapfiles/ms/icons/orange-dot.png';
+                } else if (report.aiSeverity === 'Medium') {
+                    markerColor = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+                } else if (report.aiSeverity === 'Low') {
+                    markerColor = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+                }
+
                 const marker = new google.maps.Marker({
                     position: { lat: report.latitude, lng: report.longitude },
                     map: adminMap,
                     title: `${report.defectType} at ${report.kilometerPost}`,
+                    icon: markerColor, // Set marker color based on severity
                     animation: google.maps.Animation.DROP,
                 });
 
-                // Add InfoWindow for more details on click
+                // Store marker on the report object for easy retrieval
+                report.marker = marker;
+
                 const infoWindowContent = `
-                    <div style="font-family: 'Segoe UI', sans-serif; padding: 5px;">
+                    <div style="font-family: 'Segoe UI', sans-serif; padding: 5px; position: relative;">
+                        <span class="close-info-window" style="position: absolute; top: 5px; right: 5px; cursor: pointer; font-weight: bold; color: #dc3545; font-size: 1.2em;">&times;</span>
                         <strong>${report.defectType}</strong><br>
-                        Severity: ${report.severityLevel || report.aiSeverity || 'N/A'}<br>
+                        Severity: ${report.severityLevel || 'N/A'}<br>
                         Location: ${report.kilometerPost}<br>
-                        Description: ${report.description.substring(0, 50)}...<br>
+                        Description: ${report.description ? report.description.substring(0, 100) + (report.description.length > 100 ? '...' : '') : 'N/A'}<br>
                         Status: ${report.status}<br>
+                        Assigned To: ${report.assignedTeam || 'Unassigned'}<br>
                         ${report.imageUrl ? `<img src="${report.imageUrl}" style="max-width:100px; max-height:80px; margin-top:5px; border-radius:4px;">` : ''}
                     </div>
                 `;
-                const infoWindow = new google.maps.InfoWindow({
-                    content: infoWindowContent,
-                });
-
+                
                 marker.addListener('click', () => {
+                    if (currentInfoWindow) {
+                        currentInfoWindow.close();
+                    }
+                    infoWindow.setContent(infoWindowContent);
                     infoWindow.open(adminMap, marker);
+                    currentInfoWindow = infoWindow; // Set the current open info window
+
+                    // Add event listener to the close button within the info window content
+                    google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+                        const closeButton = adminDefectMapDiv.querySelector('.close-info-window');
+                        if (closeButton) {
+                            closeButton.addEventListener('click', () => {
+                                infoWindow.close();
+                                currentInfoWindow = null;
+                            });
+                        }
+                    });
                 });
-                adminMap.markers.push(marker);
+                adminMapMarkers.push(marker);
             });
-            adminMapStatus.textContent = `Displaying ${reportsWithLocation.length} reports with location data.`;
+            adminMapStatus.textContent = `Displaying ${reportsWithLocation.length} reports with location data.` + (reportsToMap.length - reportsWithLocation.length > 0 ? ` (${reportsToMap.length - reportsWithLocation.length} reports without location data)` : '');
         }
 
         // --- Data Fetching and Dashboard Update ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Load Google Maps script when the page loads
             loadGoogleMapsScript(() => {
                 console.log("Google Maps API loaded for admin dashboard.");
-                // Fetch reports and update dashboard after map script is ready
                 fetchReportsAndUpdateDashboard();
             });
 
-            // Set up listener for "Back to Public Report" button
             backToPublicBtn.addEventListener('click', () => {
                 window.location.href = 'index.html';
             });
 
-            // Set up export buttons
             exportCsvBtn.addEventListener('click', exportReportsToCsv);
-            exportPdfBtn.addEventListener('click', exportReportsToPdf); // Updated to call exportReportsToPdf
+            exportPdfBtn.addEventListener('click', exportReportsToPdf);
+
+            applyFiltersBtn.addEventListener('click', applyFilters);
+            clearFiltersBtn.addEventListener('click', clearFilters);
+
+            // Add event listeners for new map filters
+            filterMapDefectType.addEventListener('change', () => displayAdminDefectMap(filteredReportsData));
+            filterMapSeverity.addEventListener('change', () => displayAdminDefectMap(filteredReportsData));
         });
 
 
         function fetchReportsAndUpdateDashboard() {
-            // Fetch all reports from Firestore
-            db.collection('reports').orderBy('timestamp', 'desc') // Order by timestamp for table
+            db.collection('reports').orderBy('timestamp', 'desc')
                 .onSnapshot((snapshot) => {
-                    allReportsData = []; // Clear previous data
+                    allReportsData = [];
                     snapshot.forEach(doc => {
                         allReportsData.push({ id: doc.id, ...doc.data() });
                     });
-                    updateAdminDashboard(allReportsData);
-                    populateReportsTable(allReportsData);
-                    displayAdminDefectMap(allReportsData); // Update map with all reports
+                    applyFilters(); // Apply filters on initial load and subsequent data changes
                 }, (error) => {
-                    console.error("Error fetching real-time reports for admin:", error);
+                    console.error("Error fetching real-time reports:", error);
                     adminMapStatus.textContent = "Error loading map data.";
                 });
         }
 
+        function applyFilters() {
+            let tempReports = [...allReportsData]; // Start with all data
+
+            const typeFilter = filterDefectType.value;
+            const severityFilter = filterSeverity.value;
+            const statusFilter = filterStatus.value;
+            const assignedTeamFilter = filterAssignedTeam.value.toLowerCase();
+            const startDateFilter = filterStartDate.value ? new Date(filterStartDate.value) : null;
+            const endDateFilter = filterEndDate.value ? new Date(filterEndDate.value) : null;
+
+            if (typeFilter) {
+                tempReports = tempReports.filter(report => report.defectType === typeFilter);
+            }
+            if (severityFilter) {
+                tempReports = tempReports.filter(report => (report.severityLevel === severityFilter || report.aiSeverity === severityFilter));
+            }
+            if (statusFilter) {
+                tempReports = tempReports.filter(report => report.status === statusFilter);
+            }
+            if (assignedTeamFilter) {
+                tempReports = tempReports.filter(report => (report.assignedTeam || '').toLowerCase().includes(assignedTeamFilter));
+            }
+            if (startDateFilter) {
+                tempReports = tempReports.filter(report => report.timestamp && report.timestamp.toDate() >= startDateFilter);
+            }
+            if (endDateFilter) {
+                tempReports = tempReports.filter(report => report.timestamp && report.timestamp.toDate() <= endDateFilter);
+            }
+
+            filteredReportsData = tempReports; // Update filtered data
+            updateAdminDashboard(filteredReportsData);
+            populateReportsTable(filteredReportsData);
+            displayAdminDefectMap(filteredReportsData); // Call map update with the newly filtered data
+        }
+
+        function clearFilters() {
+            filterDefectType.value = '';
+            filterSeverity.value = '';
+            filterStatus.value = '';
+            filterAssignedTeam.value = '';
+            filterStartDate.value = '';
+            filterEndDate.value = '';
+            
+            // Also clear map specific filters when main filters are cleared
+            filterMapDefectType.value = '';
+            filterMapSeverity.value = '';
+
+            applyFilters(); // Re-apply filters to show all data
+        }
+
+
         function updateAdminDashboard(reports) {
-            // Overall Summary
             let totalActive = reports.filter(r => r.status !== 'Resolved' && r.status !== 'Deferred').length;
             let criticalToday = reports.filter(r => r.aiSeverity === 'Critical' && r.timestamp && isToday(r.timestamp.toDate())).length;
             let totalResolved = reports.filter(r => r.status === 'Resolved').length;
@@ -724,7 +1227,6 @@
             totalResolvedReportsSpan.textContent = totalResolved;
             lastUpdatedTimestampAdminSpan.textContent = new Date().toLocaleString();
 
-            // Defects by Type Chart (re-using public logic)
             const defectCounts = {};
             reports.forEach(report => {
                 const type = report.defectType || 'Unknown';
@@ -771,6 +1273,14 @@
                 });
             }
 
+            // Update "Overall Summary" heading based on filters
+            let headingText = 'Overall Summary';
+            if (filterDefectType.value) {
+                headingText += ` for ${filterDefectType.value} Reports`;
+            }
+            overallSummaryHeading.textContent = headingText;
+
+
             // Detailed Breakdown Stats
             let highSeverity = reports.filter(r => r.aiSeverity === 'High' || r.severityLevel === 'High').length;
             let mediumSeverity = reports.filter(r => r.aiSeverity === 'Medium' || r.severityLevel === 'Medium').length;
@@ -780,9 +1290,9 @@
             severityMediumSpan.textContent = mediumSeverity;
             severityLowSpan.textContent = lowSeverity;
 
-            let publicReports = reports.filter(r => r.userId && r.userId.toLowerCase().includes('public')).length;
-            let staffReports = reports.filter(r => r.userId && r.userId.toLowerCase().includes('staff')).length;
-            let unknownRoleReports = reports.filter(r => !r.userId || (!r.userId.toLowerCase().includes('public') && !r.userId.toLowerCase().includes('staff'))).length;
+            let publicReports = reports.filter(r => r.reporterRole === 'Public User').length;
+            let staffReports = reports.filter(r => r.reporterRole !== 'Public User' && r.reporterRole !== 'Unknown').length; // Filter out 'Unknown' from staff
+            let unknownRoleReports = reports.filter(r => r.reporterRole === 'Unknown' || !r.reporterRole).length;
 
             reportsByPublicSpan.textContent = publicReports;
             reportsByStaffSpan.textContent = staffReports;
@@ -794,58 +1304,163 @@
 
             reports.forEach(report => {
                 const row = reportsTableBody.insertRow();
-                row.insertCell().textContent = report.userId || 'Public'; // Reporter Role
+                row.dataset.reportId = report.id; // Store report ID for updates
+
+                row.insertCell().textContent = report.reporterRole || 'Unknown'; // Reporter Role
+                row.insertCell().textContent = report.userId || 'N/A'; // User ID
                 row.insertCell().textContent = report.defectType || 'N/A'; // Type
-                row.insertCell().textContent = report.severityLevel || report.aiSeverity || 'N/A'; // Severity
-                row.insertCell().textContent = report.kilometerPost || 'N/A'; // Location (KM Post)
+                // Removed AI Severity column
+                row.insertCell().textContent = report.severityLevel || 'N/A'; // User Severity
+
+                // Location (KM Post) with Lat/Lng in brackets
+                const kmPostCell = row.insertCell();
+                kmPostCell.textContent = report.kilometerPost || calculateChainage(report.latitude, report.longitude) || 'N/A';
+                if (report.latitude && report.longitude) {
+                    const latLngDiv = document.createElement('div');
+                    latLngDiv.style.fontSize = '0.75em';
+                    latLngDiv.style.color = '#777';
+                    latLngDiv.textContent = `(${report.latitude.toFixed(6)}, ${report.longitude.toFixed(6)})`;
+                    kmPostCell.appendChild(latLngDiv);
+                }
+
                 row.insertCell().textContent = report.assetId || 'N/A'; // Asset ID
                 row.insertCell().textContent = report.description ? report.description.substring(0, 100) + (report.description.length > 100 ? '...' : '') : 'N/A'; // Message (truncated)
 
-                const imageCell = row.insertCell();
+                // Image / Timestamp column
+                const imgTimestampCell = row.insertCell();
+                // Add click listener to the cell to pan map
+                imgTimestampCell.style.cursor = 'pointer'; // Indicate clickability
+                imgTimestampCell.addEventListener('click', () => {
+                    if (report.marker && adminMap) {
+                        adminMap.panTo(report.marker.getPosition());
+                        // Scroll the page to the map section
+                        adminDefectMapDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        // Manually trigger info window content and open
+                        const infoWindowContent = `
+                            <div style="font-family: 'Segoe UI', sans-serif; padding: 5px; position: relative;">
+                                <span class="close-info-window" style="position: absolute; top: 5px; right: 5px; cursor: pointer; font-weight: bold; color: #dc3545; font-size: 1.2em;">&times;</span>
+                                <strong>${report.defectType}</strong><br>
+                                Severity: ${report.severityLevel || 'N/A'}<br>
+                                Location: ${report.kilometerPost}<br>
+                                Description: ${report.description ? report.description.substring(0, 100) + (report.description.length > 100 ? '...' : '') : 'N/A'}<br>
+                                Status: ${report.status}<br>
+                                Assigned To: ${report.assignedTeam || 'Unassigned'}<br>
+                                ${report.imageUrl ? `<img src="${report.imageUrl}" style="max-width:100px; max-height:80px; margin-top:5px; border-radius:4px;">` : ''}
+                            </div>
+                        `;
+                        if (currentInfoWindow) {
+                            currentInfoWindow.close();
+                        }
+                        const infoWindow = new google.maps.InfoWindow(); // Create a new one if needed
+                        infoWindow.setContent(infoWindowContent);
+                        infoWindow.open(adminMap, report.marker);
+                        currentInfoWindow = infoWindow;
+
+                        // Add event listener to the close button within the info window content
+                        google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+                            const closeButton = adminDefectMapDiv.querySelector('.close-info-window');
+                            if (closeButton) {
+                                closeButton.addEventListener('click', () => {
+                                    infoWindow.close();
+                                    currentInfoWindow = null;
+                                });
+                            }
+                        });
+
+                    } else {
+                        console.warn("No marker or map available for this report to pan.");
+                    }
+                });
+
                 if (report.imageUrl) {
                     const img = document.createElement('img');
                     img.src = report.imageUrl;
                     img.alt = 'Defect Image';
-                    img.onerror = function() { this.src = 'https://placehold.co/100x80/cccccc/ffffff?text=No+Image'; }; // Fallback image
-                    imageCell.appendChild(img);
+                    img.onerror = function() { this.onerror=null; this.src='https://placehold.co/100x80/cccccc/333333?text=No+Image'; }; // Fallback
+                    imgTimestampCell.appendChild(img);
                 } else {
-                    imageCell.innerHTML = 'No Image';
+                    imgTimestampCell.textContent = 'No Image';
                 }
+                const timestampDiv = document.createElement('div');
+                timestampDiv.style.fontSize = '0.75em';
+                timestampDiv.style.marginTop = '5px';
+                timestampDiv.style.color = '#555';
+                timestampDiv.textContent = formatTimestamp(report.timestamp);
+                imgTimestampCell.appendChild(timestampDiv);
 
-                row.insertCell().textContent = formatTimestamp(report.timestamp); // Timestamp
 
+                // Status Cell with inline editing
                 const statusCell = row.insertCell();
-                statusCell.textContent = report.status || 'Reported'; // Status
-                statusCell.classList.add(`status-${(report.status || 'Reported').toLowerCase().replace(/\s/g, '-')}`); // Add class for styling
+                const statusSelect = document.createElement('select');
+                statusSelect.className = 'editable-select';
+                ['Reported', 'In Progress', 'Resolved', 'Deferred'].forEach(status => {
+                    const option = document.createElement('option');
+                    option.value = status;
+                    option.textContent = status;
+                    if (report.status === status) {
+                        option.selected = true;
+                    }
+                    statusSelect.appendChild(option);
+                });
+                statusSelect.addEventListener('change', (e) => updateReportField(report.id, 'status', e.target.value));
+                statusCell.appendChild(statusSelect);
+                statusCell.classList.add(`status-${(report.status || 'Reported').toLowerCase().replace(/\s/g, '-')}`);
 
-                row.insertCell().textContent = report.assignedTeam || 'Unassigned'; // Assigned To
-                row.insertCell().textContent = report.aiRecommendation || 'N/A'; // AI Analysis
+
+                // Assigned To Cell (non-editable)
+                const assignedToCell = row.insertCell();
+                assignedToCell.textContent = report.assignedTeam || 'Unassigned';
+
+                // AI Recommendation Cell (non-editable)
+                const aiRecommendationCell = row.insertCell();
+                aiRecommendationCell.textContent = report.aiRecommendation || 'N/A';
             });
         }
 
+        // Function to update report in Firestore
+        async function updateReportField(reportId, field, value) {
+            try {
+                const reportRef = db.collection('reports').doc(reportId);
+                await reportRef.update({
+                    [field]: value
+                });
+                console.log(`Report ${reportId} field ${field} updated to ${value}`);
+                // The onSnapshot listener will automatically re-render the table
+            } catch (error) {
+                console.error("Error updating document: ", error);
+                alert("Failed to update report. Please try again.");
+            }
+        }
+
+
         // --- Export Functions ---
         function exportReportsToCsv() {
-            if (allReportsData.length === 0) {
-                alert("No data to export!");
+            if (filteredReportsData.length === 0) {
+                alert("No data to export! Apply filters or ensure there are reports.");
                 return;
             }
 
             const headers = [
-                "Reporter Role", "Type", "Severity", "Location (KM Post)", "Asset ID",
-                "Message", "Image URL", "Timestamp", "Status", "Assigned To", "AI Analysis"
+                "Reporter Role", "User ID", "Defect Type", "Severity (AI)", "Severity (User)", "Location (KM Post)",
+                "Latitude", "Longitude", "Asset ID", "Description", "Image URL",
+                "Timestamp", "Status", "Assigned To", "AI Recommendation"
             ];
 
-            const rows = allReportsData.map(report => [
-                report.userId || 'Public',
+            const rows = filteredReportsData.map(report => [
+                report.reporterRole || 'Unknown',
+                report.userId || 'N/A',
                 report.defectType || 'N/A',
-                report.severityLevel || report.aiSeverity || 'N/A',
-                report.kilometerPost || 'N/A',
+                report.aiSeverity || 'N/A', // Still include in CSV for comprehensive data
+                report.severityLevel || 'N/A',
+                report.kilometerPost || calculateChainage(report.latitude, report.longitude) || 'N/A',
+                report.latitude || '',
+                report.longitude || '',
                 report.assetId || 'N/A',
-                `"${(report.description || '').replace(/"/g, '""')}"`, // Handle commas/quotes in description
+                `"${(report.description || '').replace(/"/g, '""')}"`, // Handle commas and quotes in description
                 report.imageUrl || 'N/A',
                 formatTimestamp(report.timestamp),
                 report.status || 'Reported',
-                report.assignedTeam || 'Unassigned',
+                report.assignedTeam || 'N/A',
                 `"${(report.aiRecommendation || '').replace(/"/g, '""')}"`
             ]);
 
@@ -857,11 +1472,11 @@
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', 'KeNHA_Reports.csv');
+            link.setAttribute('download', 'KeNHA_Filtered_Reports.csv');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            alert("Reports exported to CSV!");
+            alert("Filtered reports exported to CSV!");
         }
 
         // Function to export reports to PDF
@@ -892,7 +1507,7 @@
                         // Optional: You can do something with the canvas here before PDF generation
                     }
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } // Changed to landscape for wider table
             };
 
             // Use html2pdf to generate and download the PDF
@@ -904,48 +1519,6 @@
                 alert("Failed to generate PDF. Please check console for details.");
                 pdfLoadingOverlay.classList.remove('visible'); // Hide overlay on error
             });
-        }
-
-
-        // AI Simulation Function (Copied from index.html, ensure consistency)
-        function simulateAIAnalysis(report) {
-            let severity = 'Medium';
-            let recommendation = 'Standard maintenance required.';
-
-            const lowerDescription = (report.description || '').toLowerCase();
-            const lowerDefectType = (report.defectType || '').toLowerCase();
-
-            if (lowerDescription.includes('large pothole') || lowerDescription.includes('collapsed culvert') || lowerDescription.includes('severe crack') || lowerDescription.includes('impassable') || lowerDescription.includes('accident prone')) {
-                severity = 'Critical';
-                recommendation = 'Immediate attention required: severe hazard, close section if necessary.';
-            } else if (lowerDescription.includes('significant crack') || lowerDescription.includes('major blockage') || lowerDescription.includes('medium pothole') || lowerDescription.includes('dangerous')) {
-                severity = 'High';
-                recommendation = 'Urgent repair needed, schedule within 1-3 days.';
-            } else if (lowerDescription.includes('small crack') || lowerDescription.includes('minor erosion') || lowerDescription.includes('bushes') || lowerDescription.includes('overgrowth')) {
-                severity = 'Low';
-                recommendation = 'Add to routine maintenance schedule.';
-            }
-
-            if (lowerDefectType === 'encroachment') {
-                severity = 'High';
-                recommendation = 'Notify legal and enforcement team for immediate action. Document thoroughly.';
-            } else if (lowerDefectType === 'illegal signpost') {
-                severity = 'Medium';
-                recommendation = 'Dispatch team for signpost removal and fine assessment.';
-            } else if (lowerDefectType === 'culvert blockage' && severity !== 'Critical') {
-                severity = 'High';
-                recommendation = 'Urgent clearing of debris to prevent flooding/road damage.';
-            } else if (lowerDefectType === 'pothole' && severity === 'Medium') {
-                recommendation = 'Patching required within a week.';
-            } else if (lowerDefectType === 'shoulder erosion' && severity === 'Medium') {
-                recommendation = 'Resurfacing or gabion placement recommended.';
-            }
-
-            if (report.severityLevel && ['Critical', 'High', 'Medium', 'Low'].includes(report.severityLevel)) {
-                 severity = report.severityLevel;
-            }
-
-            return { severity, recommendation };
         }
     </script>
 </body>
