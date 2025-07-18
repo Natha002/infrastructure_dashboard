@@ -153,7 +153,7 @@
         .h3-tooltip::after {
             content: " ";
             position: absolute;
-            top: 100%;
+            top: 100%; /* At the bottom of the tooltip */
             left: 50%;
             margin-left: -5px;
             border-width: 5px;
@@ -573,10 +573,8 @@
         </div>
     </header>
 
-    <main id="mainContent"> <!-- Added ID for PDF export -->
-        <h2>Overview of Road Inspection Reports</h2>
+    <main id="mainContent"> <h2>Overview of Road Inspection Reports</h2>
 
-        <!-- Public-like Snapshot Analysis -->
         <div class="dashboard-section">
             <h3 id="overallSummaryHeading">
                 Overall Summary
@@ -605,7 +603,6 @@
             <p class="data-last-updated">Data last updated: <span id="lastUpdatedTimestampAdmin"></span></p>
         </div>
 
-        <!-- New Summary Statistics -->
         <div class="dashboard-section">
             <h3>
                 Detailed Breakdown
@@ -645,10 +642,8 @@
                     <span class="stat-tooltip">Reports where the reporter's role could not be identified.</span>
                 </div>
             </div>
-            <!-- More detailed charts can go here if needed -->
-        </div>
+            </div>
 
-        <!-- Defect Locations Map View -->
         <div class="dashboard-section admin-map-container">
             <h3>Defect Locations (Map View)</h3>
             <div class="map-filter-controls">
@@ -681,11 +676,9 @@
             <p id="adminMapStatus" style="margin-top: 10px; font-style: italic; color: #777;">Loading map...</p>
         </div>
 
-        <!-- Recent Road Inspection Reports Table -->
         <div class="dashboard-section">
             <h3>Recent Road Inspection Reports</h3>
 
-            <!-- Filter Controls -->
             <div class="filter-controls">
                 <label for="filterDefectType">Defect Type:</label>
                 <select id="filterDefectType">
@@ -753,35 +746,28 @@
                         </tr>
                     </thead>
                     <tbody id="reportsTableBody">
-                        <!-- Report rows will be inserted here by JavaScript -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Export Buttons -->
         <div class="export-buttons">
             <button id="exportCsvBtn" class="export-csv-btn">Export to CSV (Excel)</button>
-            <button id="exportPdfBtn" class="export-pdf-btn">Export to PDF</button> <!-- Changed button text -->
-        </div>
+            <button id="exportPdfBtn" class="export-pdf-btn">Export to PDF</button> </div>
 
     </main>
 
-    <!-- PDF Loading Overlay -->
     <div id="pdfLoadingOverlay">
         <div class="spinner"></div>
         <p>Generating PDF... Please wait.</p>
         <p>This may take a moment, especially with images and maps.</p>
     </div>
 
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- html2pdf.js for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
@@ -810,7 +796,7 @@
         //    The error "Oops! Something went wrong" strongly suggests the URL you are using to view
         //    this page is NOT authorized in your Google Maps API key restrictions.
         //    Double-check the exact URL in your browser's address bar and add it to the allowed referrers.
-        const GOOGLE_MAPS_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE"; 
+        const Maps_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE"; 
 
         // --- DOM Elements ---
         const backToPublicBtn = document.getElementById('backToPublicBtn');
@@ -855,6 +841,7 @@
         let allReportsData = []; // Store all reports fetched from Firestore
         let filteredReportsData = []; // Store currently filtered reports (after table filters)
         let currentInfoWindow = null; // To keep track of the currently open InfoWindow
+        let roadPolyline = null; // Declare roadPolyline here to manage its lifecycle
 
         // --- Utility Functions ---
         function isToday(someDate) {
@@ -890,7 +877,7 @@
         const KAKAMEGA_LNG = 34.751; // Approximate Kakamega Longitude
         const KITALE_LAT = 1.02; // Approximate Kitale Latitude
         const KITALE_LNG = 35.00; // Approximate Kitale Longitude
-        const TOTAL_ROAD_LENGTH_KM = 120; // Approximate length of A1 KKM-Webuye-KTL Rd
+        const TOTAL_ROAD_LENGTH_KM = 120; // Approximate length of A1 KKM-Webuye-KTL Rd (used for chainage simulation)
 
         function calculateChainage(currentLat, currentLng) {
             if (!currentLat || !currentLng) return 'N/A';
@@ -955,6 +942,19 @@
         let adminMap = null; // To store the admin Google Map instance
         let adminMapMarkers = []; // To store markers for clearing
 
+        // Define a more detailed path for the KKM–Webuye–KTL Rd
+        const kkmWebuyeKtlRoadPath = [
+            { lat: 0.283, lng: 34.751 }, // Kakamega (approx)
+            { lat: 0.35, lng: 34.755 },  // North of Kakamega, towards Webuye
+            { lat: 0.45, lng: 34.76 },   // Further north
+            { lat: 0.55, lng: 34.74 },   // Approaching Webuye
+            { lat: 0.58, lng: 34.70 },   // Webuye (approx)
+            { lat: 0.65, lng: 34.75 },   // Towards Kitale
+            { lat: 0.80, lng: 34.85 },   // Mid-point to Kitale
+            { lat: 0.90, lng: 34.90 },   // Closer to Kitale
+            { lat: 1.02, lng: 35.00 }    // Kitale (approx)
+        ];
+
         function loadGoogleMapsScript(callback) {
             if (window.google && window.google.maps) {
                 callback();
@@ -966,7 +966,7 @@
             }
             const script = document.createElement('script');
             script.id = 'googleMapsScriptAdmin';
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initAdminMapPlaceholder`;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${Maps_API_KEY}&callback=initAdminMapPlaceholder`;
             script.async = true;
             script.defer = true;
             document.head.appendChild(script);
@@ -1011,15 +1011,18 @@
 
             const reportsWithLocation = reportsToMap.filter(r => r.latitude && r.longitude);
 
+            // Create a LatLngBounds object to encompass all markers AND the road polyline
+            const bounds = new google.maps.LatLngBounds();
+            kkmWebuyeKtlRoadPath.forEach(coord => bounds.extend(coord)); // Extend bounds for the road
+
             if (reportsWithLocation.length === 0) {
-                // Keep the map canvas, just clear markers and reset view
-                if (adminMap) { // Only reset if map is already initialized
-                    adminMap.setCenter({ lat: KAKAMEGA_LAT, lng: KAKAMEGA_LNG });
-                    adminMap.setZoom(8);
-                } else { // Initialize with default if not yet initialized
+                // If no reports with location, fit to the road path
+                if (adminMap) {
+                    adminMap.fitBounds(bounds);
+                } else {
                     adminMap = new google.maps.Map(adminDefectMapDiv, {
-                        center: { lat: KAKAMEGA_LAT, lng: KAKAMEGA_LNG },
-                        zoom: 8,
+                        center: bounds.getCenter(), // Initial center based on road
+                        zoom: 9, // Adjusted zoom to show the road well
                         mapTypeId: 'roadmap',
                         fullscreenControl: true,
                         streetViewControl: false,
@@ -1033,44 +1036,65 @@
                         }
                     });
                 }
-                adminMapStatus.textContent = "No reports with location data for current filters.";
-                return;
-            }
-
-            // Calculate center of all reports
-            let latSum = 0, lngSum = 0;
-            reportsWithLocation.forEach(r => {
-                latSum += r.latitude;
-                lngSum += r.longitude;
-            });
-            const centerLat = latSum / reportsWithLocation.length;
-            const centerLng = lngSum / reportsWithLocation.length;
-
-            if (!adminMap) {
-                adminMap = new google.maps.Map(adminDefectMapDiv, {
-                    center: { lat: centerLat, lng: centerLng },
-                    zoom: 10, // A good zoom level to see multiple defects
-                    mapTypeId: 'roadmap',
-                    fullscreenControl: true,
-                    streetViewControl: false,
-                    mapTypeControl: true,
-                    zoomControl: true,
-                });
-                adminMap.addListener('click', () => {
-                    if (currentInfoWindow) {
-                        currentInfoWindow.close();
-                        currentInfoWindow = null;
-                    }
-                });
+                adminMapStatus.textContent = "No reports with location data for current filters. Showing road corridor.";
             } else {
-                adminMap.setCenter({ lat: centerLat, lng: centerLng });
-                adminMap.setZoom(Math.min(12, Math.max(8, reportsWithLocation.length > 1 ? 10 : 15))); // Adjust zoom based on number of reports
+                // Extend bounds with report locations
+                reportsWithLocation.forEach(r => bounds.extend({ lat: r.latitude, lng: r.longitude }));
+
+                if (!adminMap) {
+                    adminMap = new google.maps.Map(adminDefectMapDiv, {
+                        center: bounds.getCenter(),
+                        zoom: 10,
+                        mapTypeId: 'roadmap',
+                        fullscreenControl: true,
+                        streetViewControl: false,
+                        mapTypeControl: true,
+                        zoomControl: true,
+                    });
+                    adminMap.addListener('click', () => {
+                        if (currentInfoWindow) {
+                            currentInfoWindow.close();
+                            currentInfoWindow = null;
+                        }
+                    });
+                } else {
+                    adminMap.fitBounds(bounds); // Fit map to all points (road + markers)
+                }
+                adminMapStatus.textContent = `Displaying ${reportsWithLocation.length} reports with location data.` + (reportsToMap.length - reportsWithLocation.length > 0 ? ` (${reportsToMap.length - reportsWithLocation.length} reports without location data)` : '');
             }
 
-            const infoWindow = new google.maps.InfoWindow(); // Single info window
+            // Draw the road polyline
+            if (roadPolyline) {
+                roadPolyline.setMap(null); // Remove old polyline if exists
+            }
+            roadPolyline = new google.maps.Polyline({
+                path: kkmWebuyeKtlRoadPath,
+                geodesic: true,
+                strokeColor: '#1A73E8', // A distinct, vibrant blue
+                strokeOpacity: 0.9,
+                strokeWeight: 8, // Thicker line
+                map: adminMap,
+                title: 'KKM–Webuye–KTL Road Corridor' // Tooltip for the polyline
+            });
+
+            // Add a simple InfoWindow for the polyline on click (optional, but good for UX)
+            roadPolyline.addListener('click', (event) => {
+                if (currentInfoWindow) {
+                    currentInfoWindow.close();
+                }
+                const roadInfoWindow = new google.maps.InfoWindow({
+                    content: '<div style="font-family: \'Segoe UI\', sans-serif; padding: 5px;"><strong>KKM–Webuye–KTL Road Corridor</strong><br>Main inspection route.</div>',
+                    position: event.latLng // Show info window at click location
+                });
+                roadInfoWindow.open(adminMap);
+                currentInfoWindow = roadInfoWindow;
+            });
+
+
+            const infoWindow = new google.maps.InfoWindow(); // Single info window for markers
 
             reportsWithLocation.forEach(report => {
-                let markerColor = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'; // Default
+                let markerColor = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'; // Default to red
                 if (report.aiSeverity === 'Critical') {
                     markerColor = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
                 } else if (report.aiSeverity === 'High') {
@@ -1094,7 +1118,7 @@
 
                 const infoWindowContent = `
                     <div style="font-family: 'Segoe UI', sans-serif; padding: 5px; position: relative;">
-                        <span class="close-info-window" style="position: absolute; top: 5px; right: 5px; cursor: pointer; font-weight: bold; color: #dc3545; font-size: 1.2em;">&times;</span>
+                        <span class="close-info-window" style="position: absolute; top: 5px; right: 5px; cursor: pointer; font-weight: bold; color: #dc3545; font-size: 1.2em;">×</span>
                         <strong>${report.defectType}</strong><br>
                         Severity: ${report.severityLevel || 'N/A'}<br>
                         Location: ${report.kilometerPost}<br>
@@ -1126,7 +1150,6 @@
                 });
                 adminMapMarkers.push(marker);
             });
-            adminMapStatus.textContent = `Displaying ${reportsWithLocation.length} reports with location data.` + (reportsToMap.length - reportsWithLocation.length > 0 ? ` (${reportsToMap.length - reportsWithLocation.length} reports without location data)` : '');
         }
 
         // --- Data Fetching and Dashboard Update ---
@@ -1338,7 +1361,7 @@
                         // Manually trigger info window content and open
                         const infoWindowContent = `
                             <div style="font-family: 'Segoe UI', sans-serif; padding: 5px; position: relative;">
-                                <span class="close-info-window" style="position: absolute; top: 5px; right: 5px; cursor: pointer; font-weight: bold; color: #dc3545; font-size: 1.2em;">&times;</span>
+                                <span class="close-info-window" style="position: absolute; top: 5px; right: 5px; cursor: pointer; font-weight: bold; color: #dc3545; font-size: 1.2em;">×</span>
                                 <strong>${report.defectType}</strong><br>
                                 Severity: ${report.severityLevel || 'N/A'}<br>
                                 Location: ${report.kilometerPost}<br>
