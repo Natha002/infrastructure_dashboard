@@ -1015,54 +1015,35 @@
             const bounds = new google.maps.LatLngBounds();
             kkmWebuyeKtlRoadPath.forEach(coord => bounds.extend(coord)); // Extend bounds for the road
 
-            if (reportsWithLocation.length === 0) {
-                // If no reports with location, fit to the road path
-                if (adminMap) {
-                    adminMap.fitBounds(bounds);
-                } else {
-                    adminMap = new google.maps.Map(adminDefectMapDiv, {
-                        center: bounds.getCenter(), // Initial center based on road
-                        zoom: 9, // Adjusted zoom to show the road well
-                        mapTypeId: 'roadmap',
-                        fullscreenControl: true,
-                        streetViewControl: false,
-                        mapTypeControl: true,
-                        zoomControl: true,
-                    });
-                    adminMap.addListener('click', () => {
-                        if (currentInfoWindow) {
-                            currentInfoWindow.close();
-                            currentInfoWindow = null;
-                        }
-                    });
-                }
-                adminMapStatus.textContent = "No reports with location data for current filters. Showing road corridor.";
-            } else {
-                // Extend bounds with report locations
-                reportsWithLocation.forEach(r => bounds.extend({ lat: r.latitude, lng: r.longitude }));
+            // Extend bounds with report locations if any
+            reportsWithLocation.forEach(r => bounds.extend({ lat: r.latitude, lng: r.longitude }));
 
-                if (!adminMap) {
-                    adminMap = new google.maps.Map(adminDefectMapDiv, {
-                        center: bounds.getCenter(),
-                        zoom: 10,
-                        mapTypeId: 'roadmap',
-                        fullscreenControl: true,
-                        streetViewControl: false,
-                        mapTypeControl: true,
-                        zoomControl: true,
-                    });
-                    adminMap.addListener('click', () => {
-                        if (currentInfoWindow) {
-                            currentInfoWindow.close();
-                            currentInfoWindow = null;
-                        }
-                    });
-                } else {
-                    adminMap.fitBounds(bounds); // Fit map to all points (road + markers)
-                }
-                adminMapStatus.textContent = `Displaying ${reportsWithLocation.length} reports with location data.` + (reportsToMap.length - reportsWithLocation.length > 0 ? ` (${reportsToMap.length - reportsWithLocation.length} reports without location data)` : '');
+            if (!adminMap) {
+                adminMap = new google.maps.Map(adminDefectMapDiv, {
+                    center: bounds.getCenter(), // Initial center based on road and markers
+                    zoom: 10, // Default zoom, will be overridden by fitBounds
+                    mapTypeId: 'roadmap',
+                    fullscreenControl: true,
+                    streetViewControl: false,
+                    mapTypeControl: true,
+                    zoomControl: true,
+                });
+                adminMap.addListener('click', () => {
+                    if (currentInfoWindow) {
+                        currentInfoWindow.close();
+                        currentInfoWindow = null;
+                    }
+                });
             }
+            
+            // Always fit bounds to ensure road and markers are visible
+            adminMap.fitBounds(bounds); 
+            // Optionally, if you want a bit more padding around the bounds:
+            // adminMap.fitBounds(bounds, { padding: 50 });
 
+
+            adminMapStatus.textContent = `Displaying ${reportsWithLocation.length} reports with location data.` + (reportsToMap.length - reportsWithLocation.length > 0 ? ` (${reportsToMap.length - reportsWithLocation.length} reports without location data)` : '');
+            
             // Draw the road polyline
             if (roadPolyline) {
                 roadPolyline.setMap(null); // Remove old polyline if exists
