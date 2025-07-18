@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered Road Inspection and Management System: A Pilot KKM-Webuye-KTL (A1)Rd , Kenya</title>
+    <title>Staff / Admin Dashboard</title>
     <link rel="icon" href="logo.png" type="image/png">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
@@ -416,11 +416,11 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Filter Controls */
+        /* Filter Controls - Enhanced Styling */
         .filter-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
+            display: grid; /* Use CSS Grid for better control */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive columns */
+            gap: 15px; /* Spacing between grid items */
             margin-bottom: 20px;
             justify-content: center;
             padding: 15px;
@@ -428,17 +428,24 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        .filter-controls .filter-group {
+            display: flex;
+            flex-direction: column; /* Stack label and input vertically */
+        }
         .filter-controls label {
-            font-weight: bold;
+            font-weight: 600; /* Slightly less bold */
             color: #555;
-            margin-right: 5px;
+            margin-bottom: 5px; /* Space between label and input */
+            font-size: 0.9em; /* Slightly smaller font for labels */
         }
         .filter-controls select, .filter-controls input[type="date"], .filter-controls input[type="text"] {
             padding: 8px 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 0.9em;
-            min-width: 150px;
+            font-size: 0.9em; /* Consistent font size */
+            min-width: unset; /* Remove min-width to allow grid to control width */
+            width: 100%; /* Take full width of its grid column */
+            box-sizing: border-box; /* Include padding in width */
         }
         .filter-controls button {
             padding: 8px 15px;
@@ -447,7 +454,10 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.9em;
+            font-weight: bold; /* Keep bold for buttons */
             transition: background-color 0.2s ease;
+            width: 100%; /* Take full width of its grid column */
+            box-sizing: border-box;
         }
         .filter-controls .apply-filters-btn { /* Green for Apply */
             background-color: #28a745;
@@ -504,6 +514,9 @@
             #adminDefectMap {
                 height: 400px; /* Slightly smaller map on tablets */
             }
+            .filter-controls {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjust columns for smaller screens */
+            }
         }
 
         @media (max-width: 768px) {
@@ -552,8 +565,7 @@
                 margin: 5px 0;
             }
             .filter-controls {
-                flex-direction: column;
-                align-items: stretch;
+                grid-template-columns: 1fr; /* Stack filters vertically on small mobile */
             }
             .map-filter-controls {
                 flex-direction: column;
@@ -659,7 +671,7 @@
                     <option value="Illegal Signpost">Illegal Signpost</option>
                     <option value="Encroachment">Encroachment</option>
                     <option value="Drainage Issue">Drainage Issue</option>
-                    <option value="Road Sign Damage">Road Sign Damage</option>
+                    <option value="Road Sign Damage">Road Sign Change</option>
                     <option value="Other">Other</option>
                 </select>
 
@@ -680,48 +692,69 @@
             <h3>Recent Road Inspection Reports</h3>
 
             <div class="filter-controls">
-                <label for="filterDefectType">Defect Type:</label>
-                <select id="filterDefectType">
-                    <option value="">All</option>
-                    <option value="Pothole">Pothole</option>
-                    <option value="Crack">Crack</option>
-                    <option value="Culvert Blockage">Culvert Blockage</option>
-                    <option value="Shoulder Erosion">Shoulder Erosion</option>
-                    <option value="Bridge Damage">Bridge Damage</option>
-                    <option value="Vegetation Overgrowth">Vegetation Overgrowth</option>
-                    <option value="Illegal Signpost">Illegal Signpost</option>
-                    <option value="Encroachment">Encroachment</option>
-                    <option value="Drainage Issue">Drainage Issue</option>
-                    <option value="Road Sign Damage">Road Sign Damage</option>
-                    <option value="Other">Other</option>
-                </select>
+                <div class="filter-group">
+                    <label for="filterDefectType">Defect Type:</label>
+                    <select id="filterDefectType">
+                        <option value="">All</option>
+                        <option value="Pothole">Pothole</option>
+                        <option value="Crack">Crack</option>
+                        <option value="Culvert Blockage">Culvert Blockage</option>
+                        <option value="Shoulder Erosion">Shoulder Erosion</option>
+                        <option value="Bridge Damage">Bridge Damage</option>
+                        <option value="Vegetation Overgrowth">Vegetation Overgrowth</option>
+                        <option value="Illegal Signpost">Illegal Signpost</option>
+                        <option value="Encroachment">Encroachment</option>
+                        <option value="Drainage Issue">Drainage Issue</option>
+                        <option value="Road Sign Damage">Road Sign Damage</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
 
-                <label for="filterSeverity">Severity:</label>
-                <select id="filterSeverity">
-                    <option value="">All</option>
-                    <option value="Critical">Critical</option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                </select>
+                <div class="filter-group">
+                    <label for="filterSeverity">Severity:</label>
+                    <select id="filterSeverity">
+                        <option value="">All</option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
 
-                <label for="filterStatus">Status:</label>
-                <select id="filterStatus">
-                    <option value="">All</option>
-                    <option value="Reported">Reported</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Resolved">Resolved</option>
-                    <option value="Deferred">Deferred</option>
-                </select>
+                <div class="filter-group">
+                    <label for="filterStatus">Status:</label>
+                    <select id="filterStatus">
+                        <option value="">All</option>
+                        <option value="Reported">Reported</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="Deferred">Deferred</option>
+                    </select>
+                </div>
 
-                <label for="filterAssignedTeam">Assigned Team:</label>
-                <input type="text" id="filterAssignedTeam" placeholder="Filter by team name">
+                <div class="filter-group">
+                    <label for="filterSubmissionType">Submission Type:</label>
+                    <select id="filterSubmissionType">
+                        <option value="">All</option>
+                        <option value="Public User">Public User</option>
+                        <option value="Staff Submission">Staff Submission</option>
+                    </select>
+                </div>
 
-                <label for="filterStartDate">From Date:</label>
-                <input type="date" id="filterStartDate">
+                <div class="filter-group">
+                    <label for="filterAssignedTeam">Assigned Team:</label>
+                    <input type="text" id="filterAssignedTeam" placeholder="Filter by team name">
+                </div>
 
-                <label for="filterEndDate">To Date:</label>
-                <input type="date" id="filterEndDate">
+                <div class="filter-group">
+                    <label for="filterStartDate">From Date:</label>
+                    <input type="date" id="filterStartDate">
+                </div>
+
+                <div class="filter-group">
+                    <label for="filterEndDate">To Date:</label>
+                    <input type="date" id="filterEndDate">
+                </div>
 
                 <button id="applyFiltersBtn" class="apply-filters-btn">Apply Filters</button>
                 <button id="clearFiltersBtn" class="clear-filters-btn">Clear Filters</button>
@@ -796,7 +829,7 @@
         //    The error "Oops! Something went wrong" strongly suggests the URL you are using to view
         //    this page is NOT authorized in your Google Maps API key restrictions.
         //    Double-check the exact URL in your browser's address bar and add it to the allowed referrers.
-        const Maps_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE"; 
+        const Maps_API_KEY = "AIzaSyBf9dw7PAXz1xR_tlX34hBbsYczc1vGyBE";
 
         // --- DOM Elements ---
         const backToPublicBtn = document.getElementById('backToPublicBtn');
@@ -826,6 +859,7 @@
         const filterDefectType = document.getElementById('filterDefectType');
         const filterSeverity = document.getElementById('filterSeverity');
         const filterStatus = document.getElementById('filterStatus');
+        const filterSubmissionType = document.getElementById('filterSubmissionType'); // New filter element
         const filterAssignedTeam = document.getElementById('filterAssignedTeam');
         const filterStartDate = document.getElementById('filterStartDate');
         const filterEndDate = document.getElementById('filterEndDate');
@@ -873,20 +907,43 @@
         }
 
         // Simulated Chainage Calculation (KM Post) - Consistent with index.html
-        const KAKAMEGA_LAT = 0.283; // Approximate Kakamega Latitude
-        const KAKAMEGA_LNG = 34.751; // Approximate Kakamega Longitude
-        const KITALE_LAT = 1.02; // Approximate Kitale Latitude
-        const KITALE_LNG = 35.00; // Approximate Kitale Longitude
+        // Coordinates for Kakamega MMUST Gate (KM 0 for this road segment)
+        const KAKAMEGA_MMUST_LAT = 0.283;
+        const KAKAMEGA_MMUST_LNG = 34.751;
+
+        // Approximate Kitale Latitude/Longitude for the end of the road segment
+        const KITALE_LAT = 1.02;
+        const KITALE_LNG = 35.00;
+
         const TOTAL_ROAD_LENGTH_KM = 120; // Approximate length of A1 KKM-Webuye-KTL Rd (used for chainage simulation)
 
         function calculateChainage(currentLat, currentLng) {
             if (!currentLat || !currentLng) return 'N/A';
-            const distFromKakamega = haversineDistance(KAKAMEGA_LAT, KAKAMEGA_LNG, currentLat, currentLng);
+            const distFromKakamega = haversineDistance(KAKAMEGA_MMUST_LAT, KAKAMEGA_MMUST_LNG, currentLat, currentLng);
             let chainageKm = distFromKakamega;
             chainageKm = Math.max(0, Math.min(chainageKm, TOTAL_ROAD_LENGTH_KM));
             const km = Math.floor(chainageKm);
             const meters = Math.round((chainageKm - km) * 1000);
             return `KM ${km}+${String(meters).padStart(3, '0')}`;
+        }
+
+        /**
+         * Parses a KM Post string (e.g., "KM 10+200") into a numeric kilometer value.
+         * @param {string} kmPostString The KM Post string to parse.
+         * @returns {number|null} The numeric kilometer value, or null if parsing fails.
+         */
+        function parseKmPostToKm(kmPostString) {
+            if (!kmPostString || typeof kmPostString !== 'string') return null;
+            const match = kmPostString.match(/KM\s*(\d+)\s*\+\s*(\d{1,3})/i); // Regex to match "KM X+YYY"
+            if (match) {
+                const km = parseInt(match[1], 10);
+                const meters = parseInt(match[2], 10);
+                return km + (meters / 1000);
+            }
+            // Fallback for cases where it might just be a number string
+            const num = parseFloat(kmPostString);
+            if (!isNaN(num)) return num;
+            return null;
         }
 
 
@@ -1035,15 +1092,15 @@
                     }
                 });
             }
-            
+
             // Always fit bounds to ensure road and markers are visible
-            adminMap.fitBounds(bounds); 
+            adminMap.fitBounds(bounds);
             // Optionally, if you want a bit more padding around the bounds:
             // adminMap.fitBounds(bounds, { padding: 50 });
 
 
             adminMapStatus.textContent = `Displaying ${reportsWithLocation.length} reports with location data.` + (reportsToMap.length - reportsWithLocation.length > 0 ? ` (${reportsToMap.length - reportsWithLocation.length} reports without location data)` : '');
-            
+
             // Draw the road polyline
             if (roadPolyline) {
                 roadPolyline.setMap(null); // Remove old polyline if exists
@@ -1103,13 +1160,14 @@
                         <strong>${report.defectType}</strong><br>
                         Severity: ${report.severityLevel || 'N/A'}<br>
                         Location: ${report.kilometerPost}<br>
+                        ${report.distFromKakamega !== null ? `Distance from KM 0 (Kakamega MMUST Gate): <strong>${report.distFromKakamega.toFixed(2)} km</strong><br>` : ''}
                         Description: ${report.description ? report.description.substring(0, 100) + (report.description.length > 100 ? '...' : '') : 'N/A'}<br>
                         Status: ${report.status}<br>
                         Assigned To: ${report.assignedTeam || 'Unassigned'}<br>
                         ${report.imageUrl ? `<img src="${report.imageUrl}" style="max-width:100px; max-height:80px; margin-top:5px; border-radius:4px;">` : ''}
                     </div>
                 `;
-                
+
                 marker.addListener('click', () => {
                     if (currentInfoWindow) {
                         currentInfoWindow.close();
@@ -1161,7 +1219,22 @@
                 .onSnapshot((snapshot) => {
                     allReportsData = [];
                     snapshot.forEach(doc => {
-                        allReportsData.push({ id: doc.id, ...doc.data() });
+                        const reportData = doc.data();
+
+                        let calculatedDistance = null;
+
+                        // Priority 1: If manual KM Post is provided and parseable, use it for distance
+                        const parsedKm = parseKmPostToKm(reportData.kilometerPost);
+                        if (parsedKm !== null) {
+                            calculatedDistance = parsedKm;
+                        }
+                        // Priority 2: If no parseable KM Post, but lat/lng are available, use haversine
+                        else if (reportData.latitude && reportData.longitude) {
+                            calculatedDistance = haversineDistance(KAKAMEGA_MMUST_LAT, KAKAMEGA_MMUST_LNG, reportData.latitude, reportData.longitude);
+                        }
+
+                        reportData.distFromKakamega = calculatedDistance;
+                        allReportsData.push({ id: doc.id, ...reportData });
                     });
                     applyFilters(); // Apply filters on initial load and subsequent data changes
                 }, (error) => {
@@ -1176,9 +1249,10 @@
             const typeFilter = filterDefectType.value;
             const severityFilter = filterSeverity.value;
             const statusFilter = filterStatus.value;
+            const submissionTypeFilter = filterSubmissionType.value; // Get value of new filter
             const assignedTeamFilter = filterAssignedTeam.value.toLowerCase();
             const startDateFilter = filterStartDate.value ? new Date(filterStartDate.value) : null;
-            const endDateFilter = filterEndDate.value ? new Date(filterEndDate.value) : null;
+            const endDateFilter = filterEndDate.value ? new Date(endDateFilter.value) : null;
 
             if (typeFilter) {
                 tempReports = tempReports.filter(report => report.defectType === typeFilter);
@@ -1189,6 +1263,21 @@
             if (statusFilter) {
                 tempReports = tempReports.filter(report => report.status === statusFilter);
             }
+            // Apply new submission type filter
+            if (submissionTypeFilter) {
+                tempReports = tempReports.filter(report => {
+                    const isPublicUser = report.reporterRole === 'Public User' || (!report.reporterRole && !report.staffName && !report.staffRole);
+                    const isStaffSubmission = (report.reporterRole && report.reporterRole !== 'Public User' && report.reporterRole !== 'Unknown') || (report.staffName || report.staffRole);
+
+                    if (submissionTypeFilter === 'Public User') {
+                        return isPublicUser;
+                    } else if (submissionTypeFilter === 'Staff Submission') {
+                        return isStaffSubmission;
+                    }
+                    return true; // Should not happen with current options, but good for safety
+                });
+            }
+
             if (assignedTeamFilter) {
                 tempReports = tempReports.filter(report => (report.assignedTeam || '').toLowerCase().includes(assignedTeamFilter));
             }
@@ -1209,10 +1298,11 @@
             filterDefectType.value = '';
             filterSeverity.value = '';
             filterStatus.value = '';
+            filterSubmissionType.value = ''; // Clear new filter
             filterAssignedTeam.value = '';
             filterStartDate.value = '';
             filterEndDate.value = '';
-            
+
             // Also clear map specific filters when main filters are cleared
             filterMapDefectType.value = '';
             filterMapSeverity.value = '';
@@ -1294,9 +1384,21 @@
             severityMediumSpan.textContent = mediumSeverity;
             severityLowSpan.textContent = lowSeverity;
 
-            let publicReports = reports.filter(r => r.reporterRole === 'Public User').length;
-            let staffReports = reports.filter(r => r.reporterRole !== 'Public User' && r.reporterRole !== 'Unknown').length; // Filter out 'Unknown' from staff
-            let unknownRoleReports = reports.filter(r => r.reporterRole === 'Unknown' || !r.reporterRole).length;
+            // Updated logic for dashboard stats to reflect new role handling
+            let publicReports = reports.filter(r => {
+                const role = r.reporterRole;
+                return role === 'Public User' || (!role && !r.staffName && !r.staffRole);
+            }).length;
+
+            let staffReports = reports.filter(r => {
+                const role = r.reporterRole;
+                return (role && role !== 'Public User' && role !== 'Unknown') || (r.staffName || r.staffRole);
+            }).length;
+
+            let unknownRoleReports = reports.filter(r => {
+                const role = r.reporterRole;
+                return role === 'Unknown'; // Only count 'Unknown' if it's explicitly set as such
+            }).length;
 
             reportsByPublicSpan.textContent = publicReports;
             reportsByStaffSpan.textContent = staffReports;
@@ -1310,7 +1412,20 @@
                 const row = reportsTableBody.insertRow();
                 row.dataset.reportId = report.id; // Store report ID for updates
 
-                row.insertCell().textContent = report.reporterRole || 'Unknown'; // Reporter Role
+                // Determine the display string for Reporter Role based on new logic
+                let displayReporterRole;
+                if (report.reporterRole && report.reporterRole !== 'Unknown' && report.reporterRole !== 'Public') {
+                    // If reporterRole has a value and it's not 'Unknown' or 'Public', use it directly (e.g., 'Surveyor', 'Asst Eng')
+                    displayReporterRole = report.reporterRole;
+                } else if (report.staffName || report.staffRole) {
+                    // If reporterRole is 'Unknown', 'Public', or falsy, but staffName/staffRole exist, it's a staff submission
+                    displayReporterRole = 'Staff User (Role Not Provided)';
+                } else {
+                    // Otherwise (reporterRole is 'Unknown', 'Public', or falsy, AND no staff info), default to Public User
+                    displayReporterRole = 'Public User';
+                }
+                row.insertCell().textContent = displayReporterRole; // Reporter Role
+
                 row.insertCell().textContent = report.userId || 'N/A'; // User ID
                 row.insertCell().textContent = report.defectType || 'N/A'; // Type
                 // Removed AI Severity column
@@ -1346,6 +1461,7 @@
                                 <strong>${report.defectType}</strong><br>
                                 Severity: ${report.severityLevel || 'N/A'}<br>
                                 Location: ${report.kilometerPost}<br>
+                                ${report.distFromKakamega !== null ? `Distance from KM 0 (Kakamega MMUST Gate): <strong>${report.distFromKakamega.toFixed(2)} km</strong><br>` : ''}
                                 Description: ${report.description ? report.description.substring(0, 100) + (report.description.length > 100 ? '...' : '') : 'N/A'}<br>
                                 Status: ${report.status}<br>
                                 Assigned To: ${report.assignedTeam || 'Unassigned'}<br>
@@ -1355,24 +1471,23 @@
                         if (currentInfoWindow) {
                             currentInfoWindow.close();
                         }
-                        const infoWindow = new google.maps.InfoWindow(); // Create a new one if needed
-                        infoWindow.setContent(infoWindowContent);
-                        infoWindow.open(adminMap, report.marker);
-                        currentInfoWindow = infoWindow;
+                        const tempInfoWindow = new google.maps.InfoWindow({
+                            content: infoWindowContent,
+                            position: report.marker.getPosition()
+                        });
+                        tempInfoWindow.open(adminMap);
+                        currentInfoWindow = tempInfoWindow; // Set the current open info window
 
                         // Add event listener to the close button within the info window content
-                        google.maps.event.addListenerOnce(infoWindow, 'domready', () => {
+                        google.maps.event.addListenerOnce(currentInfoWindow, 'domready', () => {
                             const closeButton = adminDefectMapDiv.querySelector('.close-info-window');
                             if (closeButton) {
                                 closeButton.addEventListener('click', () => {
-                                    infoWindow.close();
+                                    currentInfoWindow.close();
                                     currentInfoWindow = null;
                                 });
                             }
                         });
-
-                    } else {
-                        console.warn("No marker or map available for this report to pan.");
                     }
                 });
 
@@ -1380,93 +1495,98 @@
                     const img = document.createElement('img');
                     img.src = report.imageUrl;
                     img.alt = 'Defect Image';
-                    img.onerror = function() { this.onerror=null; this.src='https://placehold.co/100x80/cccccc/333333?text=No+Image'; }; // Fallback
+                    img.onerror = function() { this.src = 'https://placehold.co/100x80/cccccc/ffffff?text=No+Image'; }; // Fallback image
                     imgTimestampCell.appendChild(img);
                 } else {
-                    imgTimestampCell.textContent = 'No Image';
+                    imgTimestampCell.innerHTML = 'No Image';
                 }
                 const timestampDiv = document.createElement('div');
-                timestampDiv.style.fontSize = '0.75em';
-                timestampDiv.style.marginTop = '5px';
+                timestampDiv.style.fontSize = '0.8em';
                 timestampDiv.style.color = '#555';
                 timestampDiv.textContent = formatTimestamp(report.timestamp);
                 imgTimestampCell.appendChild(timestampDiv);
 
 
-                // Status Cell with inline editing
+                // Status dropdown
                 const statusCell = row.insertCell();
-                const statusSelect = document.createElement('select');
-                statusSelect.className = 'editable-select';
-                ['Reported', 'In Progress', 'Resolved', 'Deferred'].forEach(status => {
+                const statusDropdown = document.createElement('select');
+                statusDropdown.classList.add('editable-select'); // Use the new class
+                const statuses = ['Reported', 'In Progress', 'Resolved', 'Deferred'];
+                statuses.forEach(status => {
                     const option = document.createElement('option');
                     option.value = status;
                     option.textContent = status;
-                    if (report.status === status) {
+                    if (status === (report.status || 'Reported')) {
                         option.selected = true;
                     }
-                    statusSelect.appendChild(option);
+                    statusDropdown.appendChild(option);
                 });
-                statusSelect.addEventListener('change', (e) => updateReportField(report.id, 'status', e.target.value));
-                statusCell.appendChild(statusSelect);
-                statusCell.classList.add(`status-${(report.status || 'Reported').toLowerCase().replace(/\s/g, '-')}`);
+                statusCell.appendChild(statusDropdown);
+                statusCell.classList.add(`status-${(report.status || 'Reported').toLowerCase().replace(/\s/g, '-')}`); // Add class for styling
+
+                // Add event listener to update Firestore on status change
+                statusDropdown.addEventListener('change', async (event) => {
+                    const newStatus = event.target.value;
+                    try {
+                        await db.collection('reports').doc(report.id).update({ status: newStatus });
+                        // Update the class for styling immediately
+                        statusCell.className = ''; // Clear existing classes
+                        statusCell.classList.add(`status-${newStatus.toLowerCase().replace(/\s/g, '-')}`);
+                        console.log(`Report ${report.id} status updated to ${newStatus}`);
+                        // No need to re-fetch all reports, onSnapshot will handle it
+                    } catch (error) {
+                        console.error("Error updating document status:", error);
+                        alert("Failed to update status. Please try again.");
+                    }
+                });
 
 
-                // Assigned To Cell (non-editable)
-                const assignedToCell = row.insertCell();
-                assignedToCell.textContent = report.assignedTeam || 'Unassigned';
-
-                // AI Recommendation Cell (non-editable)
-                const aiRecommendationCell = row.insertCell();
-                aiRecommendationCell.textContent = report.aiRecommendation || 'N/A';
+                row.insertCell().textContent = report.assignedTeam || 'Unassigned'; // Assigned To
+                row.insertCell().textContent = report.aiRecommendation || 'N/A'; // AI Analysis
             });
         }
 
-        // Function to update report in Firestore
-        async function updateReportField(reportId, field, value) {
-            try {
-                const reportRef = db.collection('reports').doc(reportId);
-                await reportRef.update({
-                    [field]: value
-                });
-                console.log(`Report ${reportId} field ${field} updated to ${value}`);
-                // The onSnapshot listener will automatically re-render the table
-            } catch (error) {
-                console.error("Error updating document: ", error);
-                alert("Failed to update report. Please try again.");
-            }
-        }
-
-
         // --- Export Functions ---
         function exportReportsToCsv() {
-            if (filteredReportsData.length === 0) {
-                alert("No data to export! Apply filters or ensure there are reports.");
+            if (allReportsData.length === 0) {
+                alert("No data to export!");
                 return;
             }
 
             const headers = [
-                "Reporter Role", "User ID", "Defect Type", "Severity (AI)", "Severity (User)", "Location (KM Post)",
-                "Latitude", "Longitude", "Asset ID", "Description", "Image URL",
-                "Timestamp", "Status", "Assigned To", "AI Recommendation"
+                "Reporter Role", "User ID", "Type", "Severity", "Location (KM Post)", "Latitude", "Longitude", "Asset ID",
+                "Description", "Image URL", "Timestamp", "Status", "Assigned To", "AI Recommendation", "Distance from KM 0 (km)"
             ];
 
-            const rows = filteredReportsData.map(report => [
-                report.reporterRole || 'Unknown',
-                report.userId || 'N/A',
-                report.defectType || 'N/A',
-                report.aiSeverity || 'N/A', // Still include in CSV for comprehensive data
-                report.severityLevel || 'N/A',
-                report.kilometerPost || calculateChainage(report.latitude, report.longitude) || 'N/A',
-                report.latitude || '',
-                report.longitude || '',
-                report.assetId || 'N/A',
-                `"${(report.description || '').replace(/"/g, '""')}"`, // Handle commas and quotes in description
-                report.imageUrl || 'N/A',
-                formatTimestamp(report.timestamp),
-                report.status || 'Reported',
-                report.assignedTeam || 'N/A',
-                `"${(report.aiRecommendation || '').replace(/"/g, '""')}"`
-            ]);
+            const rows = allReportsData.map(report => {
+                // Determine the display string for Reporter Role for CSV export
+                let csvReporterRole;
+                if (report.reporterRole && report.reporterRole !== 'Unknown' && report.reporterRole !== 'Public') {
+                    csvReporterRole = report.reporterRole;
+                } else if (report.staffName || report.staffRole) {
+                    csvReporterRole = 'Staff User (Role Not Provided)';
+                } else {
+                    csvReporterRole = 'Public User';
+                }
+
+                return [
+                    csvReporterRole,
+                    report.userId || 'N/A',
+                    report.defectType || 'N/A',
+                    report.severityLevel || report.aiSeverity || 'N/A', // Use AI severity if user severity is missing
+                    report.kilometerPost || 'N/A',
+                    report.latitude !== null ? report.latitude.toFixed(6) : 'N/A',
+                    report.longitude !== null ? report.longitude.toFixed(6) : 'N/A',
+                    report.assetId || 'N/A',
+                    `"${(report.description || '').replace(/"/g, '""')}"`, // Handle commas/quotes in description
+                    report.imageUrl || 'N/A',
+                    formatTimestamp(report.timestamp),
+                    report.status || 'Reported',
+                    report.assignedTeam || 'Unassigned',
+                    `"${(report.aiRecommendation || '').replace(/"/g, '""')}"`,
+                    report.distFromKakamega !== null ? report.distFromKakamega.toFixed(2) : 'N/A'
+                ];
+            });
 
             let csvContent = headers.join(",") + "\n";
             rows.forEach(row => {
@@ -1476,11 +1596,11 @@
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.setAttribute('download', 'KeNHA_Filtered_Reports.csv');
+            link.setAttribute('download', 'KeNHA_Reports.csv');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            alert("Filtered reports exported to CSV!");
+            alert("Reports exported to CSV!");
         }
 
         // Function to export reports to PDF
@@ -1511,7 +1631,7 @@
                         // Optional: You can do something with the canvas here before PDF generation
                     }
                 },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } // Changed to landscape for wider table
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             // Use html2pdf to generate and download the PDF
